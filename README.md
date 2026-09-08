@@ -170,3 +170,90 @@ start_api_speed_test.bat
 
 默认地址为 `http://127.0.0.1:8897/`。
 
+
+## 6。 测试
+
+本次软件测试实践的主要工作，分为人工测试、测试AI、AI测试。
+
+### 项目结构
+
+```
+pipeline_v2/
+├─ anomaly_factory/          # 核心程序
+│  ├─ cli.py                 # scan、generate、review、export等命令入口
+│  ├─ config.py              # 配置、路径和API凭据管理
+│  ├─ labelme.py             # LabelMe解析、ROI/Mask生成
+│  ├─ knowledge.py           # 知识库读取与Prompt组装
+│  ├─ reference_index.py     # 异常参考图索引
+│  ├─ intelligence.py        # 视觉LLM规划、候选比较、语义质检
+│  ├─ core.py                # CORE生图API适配器
+│  ├─ pipeline.py            # 整体生成、合成、自检和导出流程
+│  ├─ db.py                  # SQLite状态、审核、尝试记录
+│  ├─ review_server.py       # 审核服务和后台生成队列
+│  ├─ speed_test_server.py   # API速度测试
+│  ├─ static/                # 审核页面前端
+│  └─ speed_test_static/     # 速度测试前端
+├─ knowledge-bank/           # 标签、Prompt规则、异常知识和反馈规则
+├─ Anomaly-reference/        # 各异常类型的真实参考图及LabelMe JSON
+├─ tests/
+│  ├─ test_pipeline.py
+│  └─ test_speed_test.py
+├─ config.json               # 主配置
+├─ run_pipeline.bat          # 命令行流水线
+├─ start_review_tool.bat     # 启动审核台
+├─ start_api_speed_test.bat  # 启动API测速工具
+├─ setup_env.bat             # 环境安装
+└─ README及设计文档
+```
+
+### 待测试模块
+
+1. 多ROI扫描、依赖与合成
+这是系统最复杂且最容易出现状态混乱的部分。重点测试同图多框、同标签多框、局部驳回、前置ROI重生成、最终合成顺序。
+
+2. 视觉LLM与参考图选择
+检查原图、LabelMe、ROI、知识库、参考异常图和历史失败意见是否真正进入请求；规划结果是否合理传递给CORE。现有测试主要使用Mock，尚不能证明真实API效果。
+
+3. CORE请求和图像回传
+使用真实API测试请求字段、图片顺序、Mask含义、超时、重试、返回尺寸和灰度一致性。这直接决定实际生成质量和速度。
+
+4. Mask、局部合成与像素保持
+检查ROI外像素是否保持、边缘是否产生灰度接缝、Mask是否覆盖真实异常、多个ROI合成后是否互相破坏。
+
+5. 队列、重试和数据库状态
+测试暂停、中断、失败恢复、重复点击、服务重启，以及“进行中—待审—重生成—通过”的状态转换。
+
+### 人工测试
+
+
+
+### 测试AI
+
+
+
+### AI测试
+
+[test_pipeline.py](D:/Workshop/update/20260811/pipeline_v2/tests/test_pipeline.py) 有22项测试，主要覆盖：
+- LabelMe扫描和Mock生成。
+- 多个Shape拆成独立ROI。
+- 同图ROI批量规划。
+- 多ROI分层生成、合成、审核和导出。
+- 顺序生成时，上一个ROI作为下一个ROI的基础。
+- 前置ROI变更后的依赖失效。
+- 驳回后自动进入重生成队列。
+- 自动重试、达到上限后转人工审核。
+- LLM规划结果进入CORE Prompt。
+- LLM语义质检失败及意见回写。
+- 多候选生成与比较。
+- 参考异常图根据LabelMe区域裁剪。
+- 知识库Markdown注入Prompt。
+- CORE multipart请求、Alpha Mask和尺寸归一化。
+- 灰度保持、局部色调匹配、拼接边界检测。
+- API配置保存和密钥脱敏。
+- 后台队列进度和规划/生图并行。
+[test_speed_test.py](D:/Workshop/update/20260811/pipeline_v2/tests/test_speed_test.py) 有2项测试：
+- 默认图和上传图是否安全转换为PNG。
+- HTTP耗时、状态码、响应字节和Request ID统计。
+- 
+codex实际运行了全部测试：24项全部通过，耗时18.03秒。
+
