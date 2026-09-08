@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "source": "Anomaly-reference",
+  "image_count": 61,
+  "json_count": 61,
+  "labels": {
+    "DS_GYD": [
+      {
+        "image": "DiuShi/GongYiDu/2004303005_3776_HongQiao_A_3-12/00_fault.jpg",
+        "json": "DiuShi/GongYiDu/2004303005_3776_HongQiao_A_3-12/00_fault.json",
+        "folder": "DiuShi/GongYiDu",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/GongYiDu/2005143002_352001_HongQiao_A_3-802/00_fault.jpg",
+        "json": "DiuShi/GongYiDu/2005143002_352001_HongQiao_A_3-802/00_fault.json",
+        "folder": "DiuShi/GongYiDu",
+        "shape_count": 2
+      },
+      {
+        "image": "DiuShi/GongYiDu/2006033101_355505_HongQiao_A_4-891/00_fault.jpg",
+        "json": "DiuShi/GongYiDu/2006033101_355505_HongQiao_A_4-891/00_fault.json",
+        "folder": "DiuShi/GongYiDu",
+        "shape_count": 1
+      }
+    ],
+    "DS_KG": [
+      {
+        "image": "DiuShi/KaGu/2012153203_355509_HongQiao_A_1-461/00_fault.jpg",
+        "json": "DiuShi/KaGu/2012153203_355509_HongQiao_A_1-461/00_fault.json",
+        "folder": "DiuShi/KaGu",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/KaGu/2012153203_355510_HongQiao_A_1-462/00_fault.jpg",
+        "json": "DiuShi/KaGu/2012153203_355510_HongQiao_A_1-462/00_fault.json",
+        "folder": "DiuShi/KaGu",
+        "shape_count": 1
+      }
+    ],
+    "DS_KKX": [
+      {
+        "image": "DiuShi/KaiKouXiao/2005143002_352005_HongQiao_A_4-564/00_fault.jpg",
+        "json": "DiuShi/KaiKouXiao/2005143002_352005_HongQiao_A_4-564/00_fault.json",
+        "folder": "DiuShi/KaiKouXiao",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/KaiKouXiao/2012153203_355508_HongQiao_A_4-8/00_fault.jpg",
+        "json": "DiuShi/KaiKouXiao/2012153203_355508_HongQiao_A_4-8/00_fault.json",
+        "folder": "DiuShi/KaiKouXiao",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/KaiKouXiao/2101223004_355514_HongQiao_A_2-1044/00_fault.jpg",
+        "json": "DiuShi/KaiKouXiao/2101223004_355514_HongQiao_A_2-1044/00_fault.json",
+        "folder": "DiuShi/KaiKouXiao",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhaPian/2006033101_355505_HongQiao_A_4-981/00_fault.jpg",
+        "json": "DiuShi/ZhaPian/2006033101_355505_HongQiao_A_4-981/00_fault.json",
+        "folder": "DiuShi/ZhaPian",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhaPian/2006033101_355508_HongQiao_A_3-528/00_fault.jpg",
+        "json": "DiuShi/ZhaPian/2006033101_355508_HongQiao_A_3-528/00_fault.json",
+        "folder": "DiuShi/ZhaPian",
+        "shape_count": 1
+      }
+    ],
+    "DS_LM": [
+      {
+        "image": "DiuShi/LuoMu/2101223004_355514_HongQiao_A_1-1167/00_fault.jpg",
+        "json": "DiuShi/LuoMu/2101223004_355514_HongQiao_A_1-1167/00_fault.json",
+        "folder": "DiuShi/LuoMu",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/LuoMu/2101223004_355514_HongQiao_A_1-1170/00_fault.jpg",
+        "json": "DiuShi/LuoMu/2101223004_355514_HongQiao_A_1-1170/00_fault.json",
+        "folder": "DiuShi/LuoMu",
+        "shape_count": 1
+      }
+    ],
+    "DS_LS": [
+      {
+        "image": "DiuShi/LuoShuan/2101223004_355511_HongQiao_A_1-563/00_fault.jpg",
+        "json": "DiuShi/LuoShuan/2101223004_355511_HongQiao_A_1-563/00_fault.json",
+        "folder": "DiuShi/LuoShuan",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/LuoShuan/2101223004_355514_HongQiao_A_2-709/00_fault.jpg",
+        "json": "DiuShi/LuoShuan/2101223004_355514_HongQiao_A_2-709/00_fault.json",
+        "folder": "DiuShi/LuoShuan",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/LuoShuan/2101223004_355514_HongQiao_A_2-989/00_fault.jpg",
+        "json": "DiuShi/LuoShuan/2101223004_355514_HongQiao_A_2-989/00_fault.json",
+        "folder": "DiuShi/LuoShuan",
+        "shape_count": 1
+      }
+    ],
+    "DS_YD": [
+      {
+        "image": "DiuShi/YouDu/2101223004_355502_HongQiao_A_4-767/00_fault.jpg",
+        "json": "DiuShi/YouDu/2101223004_355502_HongQiao_A_4-767/00_fault.json",
+        "folder": "DiuShi/YouDu",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/YouDu/2101223004_355514_HongQiao_A_2-227/00_fault.jpg",
+        "json": "DiuShi/YouDu/2101223004_355514_HongQiao_A_2-227/00_fault.json",
+        "folder": "DiuShi/YouDu",
+        "shape_count": 1
+      }
+    ],
+    "DS_ZP": [
+      {
+        "image": "DiuShi/ZhaPian/2006033101_355505_HongQiao_A_4-981/00_fault.jpg",
+        "json": "DiuShi/ZhaPian/2006033101_355505_HongQiao_A_4-981/00_fault.json",
+        "folder": "DiuShi/ZhaPian",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhaPian/2006033101_355508_HongQiao_A_3-528/00_fault.jpg",
+        "json": "DiuShi/ZhaPian/2006033101_355508_HongQiao_A_3-528/00_fault.json",
+        "folder": "DiuShi/ZhaPian",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhaPian/2006033101_355513_HongQiao_A_2-541/00_fault.jpg",
+        "json": "DiuShi/ZhaPian/2006033101_355513_HongQiao_A_2-541/00_fault.json",
+        "folder": "DiuShi/ZhaPian",
+        "shape_count": 1
+      }
+    ],
+    "DS_ZZKM": [
+      {
+        "image": "DiuShi/ZhuZhiKouMao/2005213003_351906_HongQiao_A_4-310/00_fault.jpg",
+        "json": "DiuShi/ZhuZhiKouMao/2005213003_351906_HongQiao_A_4-310/00_fault.json",
+        "folder": "DiuShi/ZhuZhiKouMao",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhuZhiKouMao/2006223201_506613_HongQiao_A_2-642/00_fault.jpg",
+        "json": "DiuShi/ZhuZhiKouMao/2006223201_506613_HongQiao_A_2-642/00_fault.json",
+        "folder": "DiuShi/ZhuZhiKouMao",
+        "shape_count": 1
+      },
+      {
+        "image": "DiuShi/ZhuZhiKouMao/2006233102_506313_HongQiao_A_2-644/00_fault.jpg",
+        "json": "DiuShi/ZhuZhiKouMao/2006233102_506313_HongQiao_A_2-644/00_fault.json",
+        "folder": "DiuShi/ZhuZhiKouMao",
+        "shape_count": 1
+      }
+    ],
+    "KKX_FZ": [
+      {
+        "image": "ZhaPianFanZhuang/2006033101_355508_HongQiao_A_3-648/00_fault.jpg",
+        "json": "ZhaPianFanZhuang/2006033101_355508_HongQiao_A_3-648/00_fault.json",
+        "folder": "ZhaPianFanZhuang",
+        "shape_count": 1
+      },
+      {
+        "image": "ZhaPianFanZhuang/2006053201_355506_HongQiao_A_4-482/00_fault.jpg",
+        "json": "ZhaPianFanZhuang/2006053201_355506_HongQiao_A_4-482/00_fault.json",
+        "folder": "ZhaPianFanZhuang",
+        "shape_count": 1
+      },
+      {
+        "image": "ZhaPianFanZhuang/2007143199_352304_HongQiao_A_4-624/00_fault.jpg",
+        "json": "ZhaPianFanZhuang/2007143199_352304_HongQiao_A_4-624/00_fault.json",
+        "folder": "ZhaPianFanZhuang",
+        "shape_count": 1
+      }
+    ],
+    "LY": [
+      {
+        "image": "LouYou/2006033101_355507_HongQiao_A_4-241/00_fault.jpg",
+        "json": "LouYou/2006033101_355507_HongQiao_A_4-241/00_fault.json",
+        "folder": "LouYou",
+        "shape_count": 1
+      },
+      {
+        "image": "LouYou/2006113211_351900_HongQiao_A_1-1102/00_fault.jpg",
+        "json": "LouYou/2006113211_351900_HongQiao_A_1-1102/00_fault.json",
+        "folder": "LouYou",
+        "shape_count": 1
+      },
+      {
+        "image": "LouYou/2007143203_356000_HongQiao_A_2-1143/00_fault.jpg",
+        "json": "LouYou/2007143203_356000_HongQiao_A_2-1143/00_fault.json",
+        "folder": "LouYou",
+        "shape_count": 1
+      }
+    ],
+    "ST_DS": [
+      {
+        "image": "SongTuo/DiaoSheng/2006053201_355507_HongQiao_A_4-146/00_fault.jpg",
+        "json": "SongTuo/DiaoSheng/2006053201_355507_HongQiao_A_4-146/00_fault.json",
+        "folder": "SongTuo/DiaoSheng",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/DiaoSheng/2006103101_355514_HongQiao_A_1-806/00_fault.jpg",
+        "json": "SongTuo/DiaoSheng/2006103101_355514_HongQiao_A_1-806/00_fault.json",
+        "folder": "SongTuo/DiaoSheng",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/DiaoSheng/2108123006_505912_HongQiao_A_1-489/00_fault.jpg",
+        "json": "SongTuo/DiaoSheng/2108123006_505912_HongQiao_A_1-489/00_fault.json",
+        "folder": "SongTuo/DiaoSheng",
+        "shape_count": 1
+      }
+    ],
+    "ST_GDFKH": [
+      {
+        "image": "SongTuo/GaoDuFaKaHuang/2006053201_355511_HongQiao_A_2-628/00_fault.jpg",
+        "json": "SongTuo/GaoDuFaKaHuang/2006053201_355511_HongQiao_A_2-628/00_fault.json",
+        "folder": "SongTuo/GaoDuFaKaHuang",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/GaoDuFaKaHuang/2006203203_505006_HongQiao_A_3-344/00_fault.jpg",
+        "json": "SongTuo/GaoDuFaKaHuang/2006203203_505006_HongQiao_A_3-344/00_fault.json",
+        "folder": "SongTuo/GaoDuFaKaHuang",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/GaoDuFaKaHuang/2012163106_355508_HongQiao_A_3-484/00_fault.jpg",
+        "json": "SongTuo/GaoDuFaKaHuang/2012163106_355508_HongQiao_A_3-484/00_fault.json",
+        "folder": "SongTuo/GaoDuFaKaHuang",
+        "shape_count": 1
+      }
+    ],
+    "ST_KG": [
+      {
+        "image": "SongTuo/KaGu/2101223004_355508_HongQiao_A_3-621/00_fault.jpg",
+        "json": "SongTuo/KaGu/2101223004_355508_HongQiao_A_3-621/00_fault.json",
+        "folder": "SongTuo/KaGu",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/KaGu/2101223004_355508_HongQiao_A_3-622/00_fault.jpg",
+        "json": "SongTuo/KaGu/2101223004_355508_HongQiao_A_3-622/00_fault.json",
+        "folder": "SongTuo/KaGu",
+        "shape_count": 1
+      }
+    ],
+    "ST_LM": [
+      {
+        "image": "SongTuo/LuoMu/2005143101_354506_HongQiao_A_3-462/00_fault.jpg",
+        "json": "SongTuo/LuoMu/2005143101_354506_HongQiao_A_3-462/00_fault.json",
+        "folder": "SongTuo/LuoMu",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/LuoMu/2005143101_354514_HongQiao_A_1-721/00_fault.jpg",
+        "json": "SongTuo/LuoMu/2005143101_354514_HongQiao_A_1-721/00_fault.json",
+        "folder": "SongTuo/LuoMu",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/LuoMu/2006113211_351900_HongQiao_A_1-1208/00_fault.jpg",
+        "json": "SongTuo/LuoMu/2006113211_351900_HongQiao_A_1-1208/00_fault.json",
+        "folder": "SongTuo/LuoMu",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/YouDu/2006203203_505000_HongQiao_A_2-1186/00_fault.jpg",
+        "json": "SongTuo/YouDu/2006203203_505000_HongQiao_A_2-1186/00_fault.json",
+        "folder": "SongTuo/YouDu",
+        "shape_count": 1
+      }
+    ],
+    "ST_YD": [
+      {
+        "image": "SongTuo/YouDu/2005213003_351911_HongQiao_A_1-371/00_fault.jpg",
+        "json": "SongTuo/YouDu/2005213003_351911_HongQiao_A_1-371/00_fault.json",
+        "folder": "SongTuo/YouDu",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/YouDu/2006033101_355508_HongQiao_A_3-82/00_fault.jpg",
+        "json": "SongTuo/YouDu/2006033101_355508_HongQiao_A_3-82/00_fault.json",
+        "folder": "SongTuo/YouDu",
+        "shape_count": 1
+      }
+    ],
+    "ST_ZZKM": [
+      {
+        "image": "SongTuo/ZhuZhiKouMao/2004303005_3776_HongQiao_A_1-82/00_fault.jpg",
+        "json": "SongTuo/ZhuZhiKouMao/2004303005_3776_HongQiao_A_1-82/00_fault.json",
+        "folder": "SongTuo/ZhuZhiKouMao",
+        "shape_count": 1
+      },
+      {
+        "image": "SongTuo/ZhuZhiKouMao/2005143002_352008_HongQiao_A_4-10/00_fault.jpg",
+        "json": "SongTuo/ZhuZhiKouMao/2005143002_352008_HongQiao_A_4-10/00_fault.json",
+        "folder": "SongTuo/ZhuZhiKouMao",
+        "shape_count": 1
+      }
+    ],
+    "S_BaiZhiTuan": [
+      {
+        "image": "Simulated/BaiZhiTuan/2004303005_3776_HongQiao_A_2-224/00_fault.jpg",
+        "json": "Simulated/BaiZhiTuan/2004303005_3776_HongQiao_A_2-224/00_fault.json",
+        "folder": "Simulated/BaiZhiTuan",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/BaiZhiTuan/2004303005_3776_HongQiao_A_4-121/00_fault.jpg",
+        "json": "Simulated/BaiZhiTuan/2004303005_3776_HongQiao_A_4-121/00_fault.json",
+        "folder": "Simulated/BaiZhiTuan",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/BaiZhiTuan/2101223004_355514_HongQiao_A_2-1141/00_fault.jpg",
+        "json": "Simulated/BaiZhiTuan/2101223004_355514_HongQiao_A_2-1141/00_fault.json",
+        "folder": "Simulated/BaiZhiTuan",
+        "shape_count": 1
+      }
+    ],
+    "S_HeiJiaoDai": [
+      {
+        "image": "Simulated/HeiJiaoDai/2006193001_505007_HongQiao_A_3-241/00_fault.jpg",
+        "json": "Simulated/HeiJiaoDai/2006193001_505007_HongQiao_A_3-241/00_fault.json",
+        "folder": "Simulated/HeiJiaoDai",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/HeiJiaoDai/2012153203_355509_HongQiao_A_1-21/00_fault.jpg",
+        "json": "Simulated/HeiJiaoDai/2012153203_355509_HongQiao_A_1-21/00_fault.json",
+        "folder": "Simulated/HeiJiaoDai",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/HeiJiaoDai/2012163106_355506_HongQiao_A_4-883/00_fault.jpg",
+        "json": "Simulated/HeiJiaoDai/2012163106_355506_HongQiao_A_4-883/00_fault.json",
+        "folder": "Simulated/HeiJiaoDai",
+        "shape_count": 1
+      }
+    ],
+    "S_SuLiao": [
+      {
+        "image": "Simulated/SuLiao/2006033101_355511_HongQiao_A_2-22/00_fault.jpg",
+        "json": "Simulated/SuLiao/2006033101_355511_HongQiao_A_2-22/00_fault.json",
+        "folder": "Simulated/SuLiao",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/SuLiao/2006203203_505000_HongQiao_A_1-1182/00_fault.jpg",
+        "json": "Simulated/SuLiao/2006203203_505000_HongQiao_A_1-1182/00_fault.json",
+        "folder": "Simulated/SuLiao",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/SuLiao/2006223201_506601_HongQiao_A_4-1161/00_fault.jpg",
+        "json": "Simulated/SuLiao/2006223201_506601_HongQiao_A_4-1161/00_fault.json",
+        "folder": "Simulated/SuLiao",
+        "shape_count": 1
+      }
+    ],
+    "S_XiangJiaoNi": [
+      {
+        "image": "Simulated/XiangJiaoNi/2101223004_355502_HongQiao_A_4-686/00_fault.jpg",
+        "json": "Simulated/XiangJiaoNi/2101223004_355502_HongQiao_A_4-686/00_fault.json",
+        "folder": "Simulated/XiangJiaoNi",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/XiangJiaoNi/2101223004_355514_HongQiao_A_1-1168/00_fault.jpg",
+        "json": "Simulated/XiangJiaoNi/2101223004_355514_HongQiao_A_1-1168/00_fault.json",
+        "folder": "Simulated/XiangJiaoNi",
+        "shape_count": 1
+      },
+      {
+        "image": "Simulated/XiangJiaoNi/2101223004_355514_HongQiao_A_2-1185/00_fault.jpg",
+        "json": "Simulated/XiangJiaoNi/2101223004_355514_HongQiao_A_2-1185/00_fault.json",
+        "folder": "Simulated/XiangJiaoNi",
+        "shape_count": 1
+      }
+    ],
+    "YW_YuMao": [
+      {
+        "image": "YiWu/YuMao/2204263001_CRH380BL_3522_J13_3-242/00_fault.jpg",
+        "json": "YiWu/YuMao/2204263001_CRH380BL_3522_J13_3-242/00_fault.json",
+        "folder": "YiWu/YuMao",
+        "shape_count": 1
+      },
+      {
+        "image": "YiWu/YuMao/2204263001_CRH380BL_3522_J13_4-228/00_fault.jpg",
+        "json": "YiWu/YuMao/2204263001_CRH380BL_3522_J13_4-228/00_fault.json",
+        "folder": "YiWu/YuMao",
+        "shape_count": 3
+      },
+      {
+        "image": "YiWu/YuMao/2207043107_CRH380BL_3531_J15_4-662/00_fault.jpg",
+        "json": "YiWu/YuMao/2207043107_CRH380BL_3531_J15_4-662/00_fault.json",
+        "folder": "YiWu/YuMao",
+        "shape_count": 1
+      }
+    ],
+    "YW_ZangWu": [
+      {
+        "image": "YiWu/ZangWu/2006033101_355513_HongQiao_A_2-751/00_fault.jpg",
+        "json": "YiWu/ZangWu/2006033101_355513_HongQiao_A_2-751/00_fault.json",
+        "folder": "YiWu/ZangWu",
+        "shape_count": 1
+      },
+      {
+        "image": "YiWu/ZangWu/2006113211_351900_HongQiao_A_2-1228/00_fault.jpg",
+        "json": "YiWu/ZangWu/2006113211_351900_HongQiao_A_2-1228/00_fault.json",
+        "folder": "YiWu/ZangWu",
+        "shape_count": 1
+      }
+    ]
+  },
+  "errors": []
+}

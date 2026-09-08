@@ -1,0 +1,4 @@
+pipeline_v2-improved
+build_date=2026-08-11
+package_profile=portable-customer-delivery
+default_mode=single-candidate-fast-balanced-parallel-planning

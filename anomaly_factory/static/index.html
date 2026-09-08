@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>工业异常数据集审核台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">HUMAN-IN-THE-LOOP DATA FACTORY</p>
+      <h1>工业异常生成与 Mask 审核台</h1>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="header-side">
+      <div class="header-actions">
+        <button id="apiSettingsOpen" class="button ghost" type="button">API与智能策略</button>
+        <button id="runQueue" class="button secondary">处理待生成/重生成</button>
+        <button id="jobDrawerToggle" class="button ghost" type="button">生成队列 <span id="jobDrawerBadge" class="button-badge">0</span></button>
+        <a class="button ghost" href="/api/export-results" title="仅下载当前审核状态备查，无需再导入">下载审核记录 CSV</a>
+      </div>
+      <div id="workerProgress" class="worker-progress" hidden>
+        <div><strong id="workerProgressText">准备中</strong><span id="workerProgressCounts">0 / 0</span></div>
+        <progress id="workerProgressBar" max="1" value="0"></progress>
+        <small id="workerProgressSample">—</small>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar panel">
+      <div class="panel-title">
+        <div>
+          <span class="kicker">QUEUE</span>
+          <h2>样本队列</h2>
+        </div>
+        <span id="visibleCount" class="count-pill">0</span>
+      </div>
+      <div class="filters">
+        <select id="labelFilter" aria-label="标签筛选"><option value="">全部标签</option></select>
+        <select id="workflowFilter" aria-label="流程筛选"><option value="">全部流程</option></select>
+        <input id="searchInput" type="search" placeholder="搜索路径或标签">
+      </div>
+      <div id="queue" class="queue"></div>
+    </aside>
+
+    <section class="workspace panel">
+      <div class="sample-head">
+        <div>
+          <span id="sampleStage" class="stage-chip">未选择</span>
+          <h2 id="sampleTitle">请选择样本</h2>
+          <p id="sampleMeta" class="muted"></p>
+        </div>
+        <div class="nav-actions">
+          <button id="toggleQueuePanel" class="panel-toggle" type="button" title="展开或收起样本队列">队列</button>
+          <button id="toggleReviewPanel" class="panel-toggle" type="button" title="展开或收起审核面板">审核</button>
+          <button id="previous" class="icon-button" title="上一个">←</button>
+          <button id="next" class="icon-button" title="下一个">→</button>
+        </div>
+      </div>
+
+      <details id="workflowGuide" class="workflow-guide">
+        <summary><span>操作导引</span><strong id="guideCurrent">从左侧选择样本开始</strong></summary>
+        <div class="guide-body">
+          <ol class="guide-steps">
+            <li data-guide-step="generate"><b>1</b><span>生成异常<small>待生成时点击顶部“处理待生成/重生成”</small></span></li>
+            <li data-guide-step="anomaly"><b>2</b><span>审核异常图<small>对比左右图；通过后自动进入 Mask 审核</small></span></li>
+            <li data-guide-step="mask"><b>3</b><span>精修并审核 Mask<small>红色区域可添加、擦除，保存后点击通过</small></span></li>
+            <li data-guide-step="complete"><b>4</b><span>完成当前样本<small>继续处理队列中的下一条</small></span></li>
+            <li data-guide-step="export"><b>5</b><span>导出最终数据集<small>全部通过后执行下方命令</small></span></li>
+          </ol>
+          <div class="export-help">
+            <p><strong>“下载审核记录 CSV”只是备查文件，不需要再次导入。</strong>它记录当前通过、驳回、原因和备注；下载后继续在本页面审核即可。</p>
+            <p>全部样本显示“全部通过”后，在当前项目根目录中执行：</p>
+            <div class="command-row"><code id="exportCommand">run_pipeline.bat export-approved --output "D:\path\to\final_dataset"</code><button id="copyExportCommand" class="tool-button" type="button">复制命令</button></div>
+          </div>
+        </div>
+      </details>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-mark">◎</div>
+        <h3>当前筛选下没有可显示样本</h3>
+        <p>请修改筛选条件，或先用命令行扫描待处理数据集。</p>
+      </div>
+
+      <div id="anomalyView" class="review-view" hidden>
+        <div id="annotationLegend" class="annotation-legend"></div>
+        <div id="comparisonGrid" class="comparison">
+          <figure>
+            <figcaption><strong>左：完整待处理原图</strong><span>绿色框是异常重点；橙色区域是CORE可编辑上下文</span></figcaption>
+            <div class="image-frame"><canvas id="sourceCanvas" aria-label="带LabelMe标注的正常参考图"></canvas></div>
+          </figure>
+          <figure>
+            <figcaption><strong id="candidateCaption">右：生成异常图</strong><span id="candidateHint">红色区域为本次生成异常位置</span></figcaption>
+            <div class="image-frame"><canvas id="candidateCanvas" aria-label="带异常位置标注的生成图"></canvas></div>
+          </figure>
+        </div>
+        <details class="qc-box">
+          <summary>自动质量检查与警告</summary>
+          <pre id="qcText"></pre>
+        </details>
+      </div>
+
+      <div id="maskView" class="review-view" hidden>
+        <div id="maskAnnotationLegend" class="annotation-legend"></div>
+        <div id="maskComparisonGrid" class="mask-grid">
+          <figure>
+            <figcaption><strong>左：完整待处理原图</strong><span>绿色为LabelMe重点，橙色为CORE上下文编辑区</span></figcaption>
+            <div class="image-frame compact"><canvas id="maskSourceCanvas" aria-label="带LabelMe标注的正常参考图"></canvas></div>
+          </figure>
+          <figure class="editor-figure">
+            <figcaption><strong>右：生成异常图＋精细 Mask</strong><span>红色为实际异常 Mask，可直接修改</span></figcaption>
+            <div class="canvas-frame"><canvas id="editorCanvas"></canvas></div>
+          </figure>
+        </div>
+        <div class="mask-toolbar">
+          <button id="drawTool" class="tool-button active">添加</button>
+          <button id="eraseTool" class="tool-button">擦除</button>
+          <label>笔刷 <input id="brushSize" type="range" min="2" max="120" value="24"><span id="brushText">24</span></label>
+          <label>透明度 <input id="maskOpacity" type="range" min="10" max="90" value="48"><span id="opacityText">48%</span></label>
+          <button id="undo" class="tool-button">撤销</button>
+          <button id="redo" class="tool-button">重做</button>
+          <button id="saveMask" class="button secondary">保存 Mask</button>
+          <span id="maskSaveState" class="muted">未修改</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="review-panel panel">
+      <div class="panel-title">
+        <div>
+          <span class="kicker">DECISION</span>
+          <h2 id="reviewTitle">审核意见</h2>
+        </div>
+      </div>
+      <div class="status-card">
+        <span>当前状态</span>
+        <strong id="currentStatus">—</strong>
+      </div>
+      <div id="generationPlanCard" class="generation-plan-card">
+        <div class="generation-plan-head"><span>下一次生成执行清单</span><strong id="generationPlanCount">全局 0 个 ROI</strong></div>
+        <div id="generationPlanBody" class="generation-plan-body">选择样本后显示当前图哪些 ROI 会生成、哪些会保留。</div>
+        <small>橙色“已排队”状态决定是否送入 CORE；下方复选框只决定右侧意见和 Prompt 作用于谁。</small>
+      </div>
+      <div id="roiSelectionSection" class="roi-selection" hidden>
+        <div class="roi-selection-head">
+          <label class="field-label">意见与 Prompt 作用目标（不改变排队状态）</label>
+          <div><button id="selectReviewableRois" class="mini-action" type="button">选择当前阶段</button><button id="clearRoiSelection" class="mini-action" type="button">清空</button></div>
+        </div>
+        <div id="roiSelectionList" class="roi-selection-list"></div>
+        <p id="roiSelectionHint" class="roi-selection-hint"></p>
+      </div>
+      <details id="promptPreviewBox" class="prompt-preview" hidden>
+        <summary id="promptPreviewSummary">即将输入 CORE 的 Prompt</summary>
+        <pre id="promptPreviewText"></pre>
+      </details>
+      <div>
+        <label class="field-label">问题类型</label>
+        <div id="reasonList" class="reason-list"></div>
+      </div>
+      <label class="field-label" for="comment">补充说明</label>
+      <textarea id="comment" rows="7" placeholder="可选。说明异常应如何围绕绿色重点，并在橙色上下文编辑区内自然延展。"></textarea>
+      <div class="decision-grid">
+        <button id="approve" class="button approve">通过</button>
+        <button id="reject" class="button reject">驳回并排队</button>
+        <button id="hold" class="button hold">暂缓</button>
+      </div>
+      <details class="danger-zone">
+        <summary>样本级操作</summary>
+        <p>将当前 LabelMe 样本目录移动到数据集回收目录，可人工恢复。</p>
+        <button id="deleteSample" class="button danger">移除整个样本目录</button>
+      </details>
+    </aside>
+  </main>
+
+  <aside id="jobDrawer" class="job-drawer" aria-label="生成队列详情" aria-hidden="true">
+    <div class="job-drawer-head">
+      <div><span class="kicker">LIVE GENERATION</span><h2>生成队列</h2></div>
+      <button id="jobDrawerClose" class="icon-button" type="button" title="收起生成队列">×</button>
+    </div>
+    <div id="jobDrawerSummary" class="job-drawer-summary"></div>
+    <div class="job-filter-row" id="jobFilterRow">
+      <button class="job-filter active" data-job-filter="all" type="button">全部</button>
+      <button class="job-filter" data-job-filter="active" type="button">进行中</button>
+      <button class="job-filter" data-job-filter="finished" type="button">本轮完成</button>
+      <button class="job-filter" data-job-filter="other" type="button">其他状态</button>
+    </div>
+    <div id="jobList" class="job-list"></div>
+  </aside>
+  <div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
+
+  <div id="apiSettingsBackdrop" class="modal-backdrop" hidden></div>
+  <section id="apiSettingsModal" class="settings-modal" hidden aria-label="API与智能策略配置">
+    <div class="settings-head">
+      <div><span class="kicker">LOCAL CONFIGURATION</span><h2>API与智能策略</h2></div>
+      <button id="apiSettingsClose" class="icon-button" type="button">×</button>
+    </div>
+    <p class="settings-note">密钥不会写入config.json；如填写，将保存到本机忽略文件 <code>api_credentials.local.json</code>。留空表示继续使用现有密钥。</p>
+    <div class="settings-scroll">
+      <fieldset><legend>共享API连接</legend><div class="settings-grid">
+        <label class="wide">Base URL<input id="apiBaseUrl" type="text" placeholder="http://host:port"></label>
+        <label class="wide">API Key<input id="apiKey" type="password" autocomplete="new-password" placeholder="留空保留现有密钥"></label>
+      </div></fieldset>
+      <fieldset><legend>图像生成CORE</legend><div class="settings-grid">
+        <label>Adapter<select id="coreAdapter"><option value="openai_image_edits">Image Edits</option><option value="openai_responses_image">Responses Image</option></select></label>
+        <label>图像模型<input id="coreModel" type="text"></label>
+        <label class="wide">Endpoint<input id="coreEndpoint" type="text"></label>
+        <label>质量<select id="coreQuality"><option>high</option><option>medium</option><option>low</option><option>auto</option></select></label>
+        <label>超时（秒）<input id="coreTimeout" type="number" min="30" max="3600"></label>
+        <label>单请求传输重试<input id="coreTransportRetries" type="number" min="1" max="10"></label>
+        <label>整轮传输重试<input id="coreTransportJobRetries" type="number" min="0" max="10"></label>
+      </div></fieldset>
+      <fieldset><legend>视觉LLM总控与质检</legend><div class="settings-grid">
+        <label>视觉模型<input id="intelModel" type="text"></label>
+        <label>推理强度<select id="intelEffort"><option>high</option><option>xhigh</option><option>medium</option><option>low</option></select></label>
+        <label class="wide">Endpoint<input id="intelEndpoint" type="text"></label>
+        <label>参考候选数<input id="refCandidateCount" type="number" min="1" max="8"></label>
+        <label>人工通过样例数<input id="approvedExampleCount" type="number" min="0" max="5"></label>
+        <label>上一轮失败候选<input id="failedExampleCount" type="number" min="0" max="1"></label>
+        <label>每轮CORE候选数<input id="agentCandidateCount" type="number" min="1" max="6"></label>
+        <label>历史失败记忆数<input id="agentFailureMemory" type="number" min="0" max="8"></label>
+        <label>超时（秒）<input id="intelTimeout" type="number" min="30" max="900"></label>
+        <label>视觉LLM传输重试<input id="intelTransportRetries" type="number" min="1" max="10"></label>
+        <div class="settings-checks wide">
+          <label><input id="intelEnabled" type="checkbox">启用视觉LLM</label>
+          <label><input id="intelOrchestrator" type="checkbox">生成策略总控</label>
+          <label><input id="intelPlanner" type="checkbox">实例规划</label>
+          <label><input id="parallelPlanning" type="checkbox">CORE生成时并行预规划下一张</label>
+          <label><input id="intelCritic" type="checkbox">语义质检</label>
+          <label><input id="intelCriticGate" type="checkbox">质检作为准入门槛</label>
+          <label><input id="agenticGeneration" type="checkbox">代理式多候选生成</label>
+          <label><input id="comparativeCritic" type="checkbox">候选横向比较择优</label>
+        </div>
+      </div></fieldset>
+      <fieldset><legend>生成范围与闭环</legend><div class="settings-grid">
+        <label>CORE参考图数<input id="generationReferenceCount" type="number" min="1" max="5"></label>
+        <label>最小向外扩展px<input id="editMinPad" type="number" min="16" max="1024"></label>
+        <label>扩展比例<input id="editRatio" type="number" min="0.05" max="1.5" step="0.05"></label>
+        <label>总尝试上限<input id="maxAttempts" type="number" min="1" max="100"></label>
+        <label>单轮自动重试<input id="autoRetries" type="number" min="0" max="99"></label>
+        <label>多ROI基础图<select id="multiRoiSourceMode"><option value="sequential_success">累积前序成功异常</option><option value="independent">全部基于干净原图</option></select></label>
+        <div class="settings-checks wide"><label><input id="manualReviewAfterRetries" type="checkbox">重试耗尽后带质检警告送人工审核（人工可最终裁决）</label></div>
+      </div></fieldset>
+    </div>
+    <pre id="apiSettingsStatus" class="settings-status">尚未测试</pre>
+    <div class="settings-actions">
+      <button id="probeCore" class="button ghost" type="button">测试图像CORE</button>
+      <button id="probeIntelligence" class="button ghost" type="button">测试视觉LLM</button>
+      <button id="saveApiSettings" class="button approve" type="button">保存并立即应用</button>
+    </div>
+  </section>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

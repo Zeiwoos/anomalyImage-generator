@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "source": "Anomaly-reference",
+  "label_priority": "labelme_json",
+  "aliases": {
+    "DA_ZP": "DS_ZP",
+    "YW_HeiJiaoDai": "S_HeiJiaoDai",
+    "YW_SuLiao": "S_SuLiao",
+    "YW_ZhiTuan": "S_BaiZhiTuan"
+  },
+  "labels": {
+    "DS_GYD": {
+      "name_zh": "工艺堵丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "工艺堵",
+      "rules": ["沿工艺堵真实轮廓移除本体", "显露孔口、座面、螺纹或合理内暗部", "保留安装面和周围紧固件"],
+      "forbidden": ["纯黑无底洞", "矩形挖空", "删除相邻结构"]
+    },
+    "DS_KG": {
+      "name_zh": "卡箍丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "卡箍",
+      "rules": ["移除完整卡箍本体及其直接遮挡", "保留连续管路、安装座和原有间隙", "恢复合理接触阴影"],
+      "forbidden": ["切断管路", "生成未知支架", "残留半个卡箍"]
+    },
+    "DS_KKX": {
+      "name_zh": "开口销丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "开口销",
+      "rules": ["移除销体", "保留销孔、轴端、垫片及连杆", "销孔边缘和内部明暗符合透视"],
+      "forbidden": ["抹掉轴端", "改变连杆", "生成规则黑点代替销孔"]
+    },
+    "DS_LM": {
+      "name_zh": "螺母丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "螺母",
+      "rules": ["只移除螺母", "保留螺杆、螺纹、垫圈或安装孔", "重建被螺母遮挡的局部表面"],
+      "forbidden": ["连螺杆一起删除", "空洞与轴线错位", "改变相邻螺母"]
+    },
+    "DS_LS": {
+      "name_zh": "螺栓丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "螺栓",
+      "rules": ["沿螺栓完整轮廓移除", "显露真实安装孔、沉孔或后方表面", "匹配金属厚度、透视和照明"],
+      "forbidden": ["纯色圆斑", "破坏安装板轮廓", "复制附近孔洞纹理"]
+    },
+    "DS_YD": {
+      "name_zh": "油堵丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "油堵",
+      "rules": ["移除油堵本体", "显露油口、座面或螺纹", "接口内部暗部具有有限深度"],
+      "forbidden": ["无底黑洞", "扩大油口", "附带生成漏油，除非标签同时包含LY"]
+    },
+    "DS_ZP": {
+      "name_zh": "闸片丢失",
+      "family": "missing",
+      "operation": "remove_large_part",
+      "object": "闸片",
+      "rules": ["先识别完整闸片轮廓、厚度和支撑关系", "移除闸片并恢复后方制动盘、安装面或间隙", "保持相邻机构连续"],
+      "forbidden": ["矩形删除", "臆造复杂内部机构", "扭曲制动盘或支架", "残留悬空闸片边缘"]
+    },
+    "DS_ZZKM": {
+      "name_zh": "注脂口帽丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "注脂口帽",
+      "rules": ["只移除保护帽", "保留注脂嘴、接口或螺纹主体", "恢复小范围遮挡与阴影"],
+      "forbidden": ["删除整个注脂嘴", "扩大接口", "改变周围管线"]
+    },
+    "LY": {
+      "name_zh": "漏油",
+      "family": "oil_leak",
+      "operation": "add_surface_anomaly",
+      "object": "油液",
+      "rules": ["从油堵、螺栓、接缝或接口附近形成合理泄漏源", "生成不规则暗色油膜、积油或顺重力短流痕", "保留底层纹理并加入有限湿润反光和深浅层次", "异常清楚可检测且不触碰图像边缘"],
+      "forbidden": ["彩色油迹", "孤立小黑点", "规则纯色斑块", "覆盖无关大面积表面", "改变全图曝光"]
+    },
+    "ST_DS": {
+      "name_zh": "吊绳松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "吊绳",
+      "rules": ["保留绳体连续、粗细和材质", "改变固定端或垂落姿态", "姿态服从重力和遮挡"],
+      "forbidden": ["删除绳体", "生成断裂", "让绳体悬空穿过零件"]
+    },
+    "ST_GDFKH": {
+      "name_zh": "高度阀卡簧松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "高度阀卡簧",
+      "rules": ["卡簧仍位于安装点附近", "表现为偏离卡槽或未完全卡入", "保持金属丝结构和真实尺度"],
+      "forbidden": ["变成随机金属丝", "删除卡簧", "改变高度阀主体"]
+    },
+    "ST_KG": {
+      "name_zh": "卡箍松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "卡箍",
+      "rules": ["卡箍仍环绕或紧邻管路", "表现为开口、错位或失去夹紧", "与管径、紧固端保持机械关系"],
+      "forbidden": ["删除卡箍", "切断管路", "生成第二个卡箍"]
+    },
+    "ST_LM": {
+      "name_zh": "螺母松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "螺母",
+      "rules": ["螺母与螺杆同轴", "沿螺纹方向退出并显露更多螺纹", "保留垫圈和安装板"],
+      "forbidden": ["横向悬浮", "变成螺母丢失", "弯曲螺杆"]
+    },
+    "ST_YD": {
+      "name_zh": "油堵松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "油堵",
+      "rules": ["油堵沿接口轴线有限退出", "显露部分螺纹或座面", "堵头仍与接口保持连接关系"],
+      "forbidden": ["删除油堵", "改变接口方向", "无依据新增大量漏油"]
+    },
+    "ST_ZZKM": {
+      "name_zh": "注脂口帽松脱",
+      "family": "loose",
+      "operation": "displace",
+      "object": "注脂口帽",
+      "rules": ["帽体仍位于接口附近", "表现为偏移、翘起或未扣紧", "帽体尺度和材质保持一致"],
+      "forbidden": ["删除注脂嘴", "帽体悬浮", "改变周边管线"]
+    },
+    "S_BaiZhiTuan": {
+      "name_zh": "白纸团模拟异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "白纸团",
+      "rules": ["生成不规则压皱纸团", "具有折面、纤维边缘和接触阴影", "亮度较高但保留层次"],
+      "forbidden": ["纯白圆块", "过曝无纹理", "漂浮无接触"]
+    },
+    "S_HeiJiaoDai": {
+      "name_zh": "黑胶带模拟异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "黑胶带",
+      "rules": ["生成偶然遗留的撕裂、折叠或松散黑胶带片段", "只在局部接触点被夹住、搭挂或黏附，并具有翘边、褶皱和接触阴影", "外轮廓不对称，明确表现为非设备异物"],
+      "forbidden": ["整齐均匀地环绕管线或横杆", "多圈规则包扎或正常护套", "纯黑矩形", "无接触贴图", "覆盖不相关结构"]
+    },
+    "S_SuLiao": {
+      "name_zh": "塑料模拟异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "塑料",
+      "rules": ["生成薄软塑料片或袋状物", "具有褶皱、折射或半透明层次", "遮挡与接触关系真实"],
+      "forbidden": ["硬质规则板", "纯色贴片", "不合理高光"]
+    },
+    "S_XiangJiaoNi": {
+      "name_zh": "橡胶泥模拟异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "橡胶泥",
+      "rules": ["生成黏附表面的深色不规则团块", "边缘钝且具有厚度、压痕", "接触阴影自然"],
+      "forbidden": ["纯黑油斑", "规则圆形", "漂浮团块"]
+    },
+    "YW_YuMao": {
+      "name_zh": "羽毛异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "羽毛",
+      "rules": ["羽轴细长并自然弯曲", "羽枝可辨但符合成像清晰度", "与设备存在卡住、搭靠或遮挡关系"],
+      "forbidden": ["树叶形贴图", "不受重力的悬浮", "复制多根相同羽毛"]
+    },
+    "YW_ZangWu": {
+      "name_zh": "脏污异物",
+      "family": "foreign_object",
+      "operation": "add_object",
+      "object": "脏污或杂物",
+      "rules": ["生成有沉积或实体依据的局部脏污", "边缘和内部颗粒层次不规则", "与宿主表面材质融合"],
+      "forbidden": ["均匀调暗", "大面积模糊", "把原阴影当脏污"]
+    },
+    "PSTQ_CLXDB": {
+      "name_zh": "破损脱漆_齿轮箱挡板",
+      "family": "damage",
+      "operation": "add_surface_damage",
+      "object": "齿轮箱挡板表面",
+      "rules": ["仅在ROI内形成局部掉漆、剥落或表层破损", "破损边缘不规则并显露合理底材", "保持挡板几何、厚度、边界及原始灰度成像不变"],
+      "forbidden": ["把挡板删除或变形", "生成规则色块", "扩大到ROI外", "凭空增加裂断结构"]
+    },
+    "FSTS": {
+      "name_zh": "防松铁丝丢失",
+      "family": "missing",
+      "operation": "remove",
+      "object": "防松铁丝",
+      "rules": ["沿细金属防松铁丝真实轮廓完整移除", "恢复铁丝遮挡下的螺栓头、垫圈和安装面纹理", "保留螺栓、螺母、孔位以及ROI外的其他防松结构"],
+      "forbidden": ["连同螺栓一起删除", "留下悬空半截铁丝", "把铁丝改成粗线或黑色涂痕", "破坏相邻制动结构"]
+    },
+    "KKX_FZ": {
+      "name_zh": "开口销翻转",
+      "family": "reverse_installation",
+      "operation": "reorient",
+      "object": "开口销",
+      "rules": ["保留同一开口销本体和安装点", "将开口销的可见朝向或锁止姿态翻转到异常状态", "销体仍穿过真实销孔并符合透视"],
+      "forbidden": ["新增第二个销", "删除销", "改变制动盘、闸片或连杆"]
+    }
+  }
+}
