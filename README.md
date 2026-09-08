@@ -4,8 +4,6 @@
 
 这是一个可迁移的“视觉 LLM 生成代理 + 图像生成 CORE + 人工审核”项目。程序读取带 LabelMe 标注的待处理图像，结合知识库与异常参考库规划编辑区域、选择参考、生成候选、执行自动质检，并在网页中完成人工质量审核、局部 ROI 重生成和 Mask 修订。
 
-本版在原始 v2 基础上增加了同图多 ROI 批量规划、下一图视觉规划与当前 CORE 生成并行、视觉代理语义 Mask/保护区、前序成功 ROI 累积上下文、精确失败原因、失败反馈驱动重试和动态队列状态。完整内部调用链见 `V2完整生成流程分析.md`。
-
 本发布包已经脱敏：不包含原机器的 API Key、API 地址、数据集路径、数据库、审核结果、生成中间图或 Python/Conda 固定路径。
 
 ## 五分钟快速启动（首次使用必读）
@@ -172,51 +170,3 @@ start_api_speed_test.bat
 
 默认地址为 `http://127.0.0.1:8897/`。
 
-## 6. 中间产物与迁移
-
-所有数据库、候选图、Prompt、请求清单、质检结果和审核状态默认写入：
-
-```text
-中间产物/workspace/
-```
-
-迁移到另一台机器时：
-
-- 复制整个项目目录；
-- 不要复制 `api_credentials.local.json`，在新机器重新填写；
-- 修改 `config.json` 的 `dataset.root`；
-- 重新运行 `setup_env.bat` 或配置 `PIPELINE_PYTHON`；
-- 如果修改了 `Anomaly-reference`，运行 `run_pipeline.bat index-references`。
-
-## 7. 发布包安全边界
-
-以下文件不应进入共享包、代码仓库或压缩包：
-
-- `api_credentials.local.json`、`.env`、任何真实 Key/Token；
-- `python_path.local.txt`、`.venv/`；
-- `中间产物/`、`*.sqlite3`、审核 CSV；
-- 待处理数据集和最终导出数据，除非得到明确授权。
-
-`api_credentials.example.json` 只包含占位符，可复制为 `api_credentials.local.json` 后在本机填写，但不要把填写后的文件再次分享。
-
-## 8. 测试
-
-在项目根目录执行：
-
-```bat
-python -m unittest discover -s tests -v
-```
-
-离线单元测试不会调用真实生图 API；联网探测与实际生成会消耗 API 额度。
-
-## 9. 客户交付验收建议
-
-首次部署建议按以下顺序验收：
-
-1. `setup_env.bat` 成功创建或识别 Python；
-2. `start_review_tool.bat --check` 能识别知识库、参考库和配置；
-3. 设置 `dataset.root` 后执行 `run_pipeline.bat scan`，控制台返回非零样本数；
-4. 网页左侧能显示样本、标签、ROI 和待生成 Prompt；
-5. API 配置连接测试通过后，仅选择一张小样本进行生成验证；
-6. 验证异常审核、按 ROI 驳回、Mask 修改和 `export-approved` 均可完成；
-7. 不要向开发方回传客户 API Key、原始数据或 `中间产物/`，除非另有安全约定。
