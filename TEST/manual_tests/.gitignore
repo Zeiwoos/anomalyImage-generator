@@ -1,0 +1,8 @@
+config.local.json
+reports/*
+!reports/.gitkeep
+fixtures/*
+!fixtures/README.md
+__pycache__/
+*.pyc
+

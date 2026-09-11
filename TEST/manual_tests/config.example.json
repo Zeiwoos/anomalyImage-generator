@@ -1,0 +1,7 @@
+{
+  "base_url": "http://127.0.0.1:8898",
+  "timeout_seconds": 15,
+  "worker_timeout_seconds": 1800,
+  "poll_interval_seconds": 1.0
+}
+
