@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import base64
+import sys
 import tempfile
 import unittest
 import urllib.request
 from pathlib import Path
+
+PROJECT = Path(__file__).resolve().parents[2]
+if str(PROJECT) not in sys.path:
+    sys.path.insert(0, str(PROJECT))
 
 from PIL import Image
 

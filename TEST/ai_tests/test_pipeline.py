@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import shutil
 import tempfile
 import threading
@@ -11,6 +12,10 @@ import base64
 from pathlib import Path
 from unittest.mock import patch
 
+PROJECT = Path(__file__).resolve().parents[2]
+if str(PROJECT) not in sys.path:
+    sys.path.insert(0, str(PROJECT))
+
 from PIL import Image
 
 from anomaly_factory.config import load_config
@@ -19,9 +24,6 @@ from anomaly_factory.intelligence import build_roi_context
 from anomaly_factory.pipeline import Pipeline, boundary_seam_metrics, match_local_tone, qc_metrics
 from anomaly_factory.reference_index import build_reference_index
 from anomaly_factory.review_server import ReviewApplication
-
-
-PROJECT = Path(__file__).resolve().parents[2]
 
 
 class PipelineTest(unittest.TestCase):
