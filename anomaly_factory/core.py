@@ -146,9 +146,9 @@ def _extract(payload: Any, dotted: str) -> Optional[Any]:
 def _http_opener(config: Dict[str, Any], runtime_env: Dict[str, str], base_url: str):
     """Build an opener while honoring the project proxy policy.
 
-    Python's urllib also reads the Windows registry proxy. The private gateway
-    used by this project must bypass that proxy even when settings.json carries
-    a lowercase ``no_proxy`` value that was not exported into os.environ.
+    Python's urllib may read the operating system proxy settings. The private
+    gateway used by this project must bypass that proxy when ``no_proxy`` or
+    ``NO_PROXY`` explicitly covers the target host.
     """
     mode = str(config.get("proxy_mode") or "auto").strip().lower()
     if mode == "direct":

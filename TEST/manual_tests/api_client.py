@@ -58,7 +58,7 @@ class ReviewApiClient:
             raise ApiError(f"{method} {request.full_url} -> HTTP {exc.code}: {detail}") from exc
         except urllib.error.URLError as exc:
             raise ApiError(
-                f"无法连接审核后端 {self.base_url}：{exc.reason}。请先启动 start_review_tool.bat，"
+                f"无法连接审核后端 {self.base_url}：{exc.reason}。请先启动请先启动 start_review_tool.bat或 ./start_review_tool.sh，"
                 "并核对 config.local.json 中的端口。"
             ) from exc
 
