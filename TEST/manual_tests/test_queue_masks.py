@@ -11,7 +11,7 @@ from TEST._shared.fixtures import LocalHttpTest
 
 class QueueMaskCases(LocalHttpTest):
     def test_B12_queue_duplicate_start_and_completion(self):
-        """B12: duplicate start returns worker_running; original worker completes exactly once."""
+        """B12：重复启动应返回 worker_running，原工作线程应恰好完成一次。"""
         target = self.rows[0]["id"]
         self.pipeline.db.set_workflow(target, "regen_queued")
         entered, release = threading.Event(), threading.Event()
@@ -39,7 +39,7 @@ class QueueMaskCases(LocalHttpTest):
         self.assertEqual(self.app.worker_state["completed"], 1)
 
     def test_B13_persisted_review_survives_database_reopen(self):
-        """B13: reopening SQLite preserves review and feedback; no server-process restart claim."""
+        """B13：重新打开 SQLite 后应保留审核结果和反馈；本用例不验证服务器进程重启。"""
         target = self.rows[0]["id"]
         self.app.review(target, "anomaly", "rejected", ["WRONG_STRUCTURE"], "B13_PERSIST")
         reopened = Database(self.pipeline.db.path)
@@ -48,7 +48,7 @@ class QueueMaskCases(LocalHttpTest):
         self.assertEqual(saved["anomaly_comment"], "B13_PERSIST")
 
     def test_B14_difference_mask_does_not_escape_allowed_area(self):
-        """B14: even with dilation, derived anomaly mask stays inside allowed region."""
+        """B14：即使执行膨胀，生成的异常掩码也不能超出允许区域。"""
         source = Image.new("L", (128, 96), 120)
         candidate = Image.new("L", source.size, 45)
         allowed = Image.new("L", source.size, 0)
@@ -58,7 +58,7 @@ class QueueMaskCases(LocalHttpTest):
         self.assertIsNone(ImageChops.subtract(mask, allowed).getbbox())
 
     def test_B15_empty_or_border_changes_fail_qc(self):
-        """B15: zero-change and border-touching anomaly masks fail deterministic QC."""
+        """B15：无变化和触及边界的异常掩码都应无法通过确定性质量检查。"""
         source = Image.new("L", (128, 96), 120)
         allowed = Image.new("L", source.size, 255)
         empty = Image.new("L", source.size, 0)
