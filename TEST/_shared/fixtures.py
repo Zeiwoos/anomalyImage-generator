@@ -25,7 +25,7 @@ PROJECT = Path(__file__).resolve().parents[2]
 
 
 def write_sample(folder, stem="source", labels=("DS_LS", "LY")):
-    """Synthetic geometry, never a real industrial quality reference."""
+    """生成灰度图片和矩形区域标注；这些合成数据不能作为真实工业质量标准。"""
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
     source = folder / (stem + ".png")
@@ -84,7 +84,7 @@ class IsolatedPipelineTest(unittest.TestCase):
                            "auto_retry_failed": False},
             "review": {"open_browser": False},
         }), encoding="utf-8")
-        # Guard unexpected upstream calls; loopback HTTP tests use an unpatched socket path.
+        # 阻止离线测试意外访问外部 API；本地 HTTP 测试走另一条通信路径。
         self.network_guard = patch("urllib.request.OpenerDirector.open",
                                    side_effect=AssertionError("Unexpected external API call in offline test"))
         self.network_guard.start()
@@ -95,7 +95,7 @@ class IsolatedPipelineTest(unittest.TestCase):
         self.rows = sorted(self.pipeline.db.list_samples(), key=lambda row: row["shapes"][0]["index"])
 
     def seed_attempts(self):
-        """Insert synthetic candidates to test review, not model quality."""
+        """绘制简单候选图和掩膜并写入生成记录，用于测试审核流程。"""
         for index, row in enumerate(self.rows):
             attempt = self.pipeline.db.next_attempt(row["id"])
             folder = self.root / "seed" / row["id"] / str(attempt)
@@ -136,7 +136,7 @@ class LocalHttpTest(IsolatedPipelineTest):
 
     def request(self, method, path, payload=None, raw=None):
         import http.client
-        # A real HTTP request reaches Handler, JSON parsing and Database.
+        # 发送真实 HTTP 请求，实际执行后端 Handler、JSON 解析和数据库操作。
         conn = http.client.HTTPConnection("127.0.0.1", self.server.server_port, timeout=5)
         data = raw if raw is not None else (json.dumps(payload).encode() if payload is not None else None)
         try:

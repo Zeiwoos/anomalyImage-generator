@@ -1,5 +1,3 @@
-"""Executable case index; no historical results are stored here."""
-
 CASES = [
     {
         "id": "A01",
@@ -194,9 +192,9 @@ CASES = [
 ]
 
 def resolved_cases(root=None):
-    """Prefer flattened test files when present; otherwise use role subfolders.
+    """优先使用本目录中的测试文件，否则使用责任组子目录中的文件。
 
-    The project and TEST/_shared remain required. Only the role files are movable.
+    运行仍依赖项目代码和 TEST/_shared；这里只处理测试文件的位置。
     """
     from pathlib import Path
     root = Path(root) if root is not None else Path(__file__).resolve().parent

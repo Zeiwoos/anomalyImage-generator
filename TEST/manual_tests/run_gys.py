@@ -1,4 +1,3 @@
-"""Before-fix tests: manual_tests, gys; load the original project code."""
 from pathlib import Path
 import sys
 

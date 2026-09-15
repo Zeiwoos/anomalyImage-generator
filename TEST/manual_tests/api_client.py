@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional
 
 
 class ApiError(AssertionError):
-    """Raised when the review API cannot satisfy a test request."""
+    """审核接口无法完成测试请求时抛出的断言异常。"""
 
 
 @dataclass(frozen=True)
