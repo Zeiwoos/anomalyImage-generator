@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from typing import Any, Dict
 
-from api_client import ApiError, ReviewApiClient
+from TEST.manual_tests.api_client import ApiError, ReviewApiClient
 
 
 TEST_ROOT = Path(__file__).resolve().parent
@@ -65,4 +65,3 @@ class ManualApiTestCase(unittest.TestCase):
     def assert_has_keys(self, payload: Dict[str, Any], *keys: str) -> None:
         missing = [key for key in keys if key not in payload]
         self.assertFalse(missing, f"缺少字段 {missing}；实际返回：{payload}")
-
