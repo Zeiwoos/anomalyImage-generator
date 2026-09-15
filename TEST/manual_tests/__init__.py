@@ -1,1 +1,1 @@
-"""gys cases are stored here; zyc cases are in the zyc subpackage."""
+"""Manual test cases for the gys and zyc roles."""

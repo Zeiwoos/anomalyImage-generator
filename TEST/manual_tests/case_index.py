@@ -79,92 +79,92 @@ CASES = [
     {
         "id": "B01",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B01_health_items_worker_routes"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B01_health_items_worker_routes"
     },
     {
         "id": "B02",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B02_reject_only_selected_roi_and_save_feedback"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B02_reject_only_selected_roi_and_save_feedback"
     },
     {
         "id": "B03",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B03_approval_reaches_completed_after_mask_only"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B03_approval_reaches_completed_after_mask_only"
     },
     {
         "id": "B04",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B04_mask_review_before_anomaly_approval_fails"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B04_mask_review_before_anomaly_approval_fails"
     },
     {
         "id": "B05",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B05_bad_batch_prevalidation_has_no_partial_approval"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B05_bad_batch_prevalidation_has_no_partial_approval"
     },
     {
         "id": "B06",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B06_mask_save_binary_backup_and_size_validation"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B06_mask_save_binary_backup_and_size_validation"
     },
     {
         "id": "B07",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B07_image_bytes_and_unknown_image"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B07_image_bytes_and_unknown_image"
     },
     {
         "id": "B08",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B08_csv_includes_independent_roi_outcomes"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B08_csv_includes_independent_roi_outcomes"
     },
     {
         "id": "B09",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B09_bad_json_and_unknown_routes"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B09_bad_json_and_unknown_routes"
     },
     {
         "id": "B10",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B10_delete_requires_confirmation_and_is_recoverable"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B10_delete_requires_confirmation_and_is_recoverable"
     },
     {
         "id": "B11",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_B11_export_requires_all_roi_approvals"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_B11_export_requires_all_roi_approvals"
     },
     {
         "id": "B12",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_queue_masks.QueueMaskCases.test_B12_queue_duplicate_start_and_completion"
+        "test": "TEST.manual_tests.test_queue_masks.QueueMaskCases.test_B12_queue_duplicate_start_and_completion"
     },
     {
         "id": "B13",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_queue_masks.QueueMaskCases.test_B13_persisted_review_survives_database_reopen"
+        "test": "TEST.manual_tests.test_queue_masks.QueueMaskCases.test_B13_persisted_review_survives_database_reopen"
     },
     {
         "id": "B14",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_queue_masks.QueueMaskCases.test_B14_difference_mask_does_not_escape_allowed_area"
+        "test": "TEST.manual_tests.test_queue_masks.QueueMaskCases.test_B14_difference_mask_does_not_escape_allowed_area"
     },
     {
         "id": "B15",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_queue_masks.QueueMaskCases.test_B15_empty_or_border_changes_fail_qc"
+        "test": "TEST.manual_tests.test_queue_masks.QueueMaskCases.test_B15_empty_or_border_changes_fail_qc"
     },
     {
         "id": "B16",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_speed_api.SpeedApiCases.test_B16_speed_config_history_and_result"
+        "test": "TEST.manual_tests.test_speed_api.SpeedApiCases.test_B16_speed_config_history_and_result"
     },
     {
         "id": "B17",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_speed_api.SpeedApiCases.test_B17_speed_invalid_kind_and_unconfirmed_cost"
+        "test": "TEST.manual_tests.test_speed_api.SpeedApiCases.test_B17_speed_invalid_kind_and_unconfirmed_cost"
     },
     {
         "id": "B18",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_speed_api.SpeedApiCases.test_B18_speed_dispatch_history_and_busy"
+        "test": "TEST.manual_tests.test_speed_api.SpeedApiCases.test_B18_speed_dispatch_history_and_busy"
     },
     {
         "id": "D01",
@@ -184,28 +184,15 @@ CASES = [
     {
         "id": "D03",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_D03_anomaly_cannot_use_normal_stage_to_skip_mask_review"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_D03_anomaly_cannot_use_normal_stage_to_skip_mask_review"
     },
     {
         "id": "D03b",
         "role": "zyc",
-        "test": "TEST.manual_tests.zyc.test_review_flow.ReviewFlowCases.test_D03b_normal_cannot_use_anomaly_stage"
+        "test": "TEST.manual_tests.test_review_flow.ReviewFlowCases.test_D03b_normal_cannot_use_anomaly_stage"
     }
 ]
 
 def resolved_cases(root=None):
-    """Prefer flattened test files when present; otherwise use role subfolders.
-
-    The project and TEST/_shared remain required. Only the role files are movable.
-    """
-    from pathlib import Path
-    root = Path(root) if root is not None else Path(__file__).resolve().parent
-    result = []
-    for case in CASES:
-        item = dict(case)
-        module, class_name, method = item["test"].rsplit(".", 2)
-        filename = module.rsplit(".", 1)[-1]
-        if (root / (filename + ".py")).is_file():
-            item["test"] = ".".join(("TEST.manual_tests", filename, class_name, method))
-        result.append(item)
-    return result
+    """Return independent copies of the flattened manual-test case entries."""
+    return [dict(case) for case in CASES]
