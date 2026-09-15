@@ -51,7 +51,7 @@ def main(module, fixed_role=None, *, candidate=False):
         parser.error('No cases selected')
     chosen = TEST_ROOT / '_shared/fix_candidates' if candidate else PROJECT
     if candidate and module != 'manual_tests' and not args.list:
-        parser.error('AI修复版已归档；当前 fix_candidates 只包含人工测试第一阶段的修复。')
+        parser.error('deny')
     if candidate and not args.list and not (chosen / 'anomaly_factory/__init__.py').is_file():
         parser.error('找不到 TEST/_shared/fix_candidates/anomaly_factory 修复副本。')
     sys.path.insert(0, str(PROJECT))
