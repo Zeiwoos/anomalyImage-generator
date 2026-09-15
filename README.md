@@ -136,13 +136,3 @@ python -m unittest TEST.manual_tests.test_feedback -v
 根目录保持修复前代码时，全部人工测试应为 **33 个通过、5 个失败**，失败用例为 D01、D02、D02b、D03、D03b。修复副本的通过数量取决于其中已经合入哪些修复；仅包含 gys 修复时，D03、D03b 仍会失败。
 
 上述运行入口会把报告写入 `TEST/manual_tests/reports/<all、gys 或 zyc>/<baseline 或 candidate>/results.json`。其中 `baseline` 对应根目录代码，`candidate` 对应修复副本；`loaded_source` 字段记录实际加载的源文件。同一入口再次运行会覆盖对应报告。
-
-### 4. AI 模块的离线单元测试
-
-如需检查 AI 模块的模拟响应处理逻辑，运行：
-
-```bash
-python TEST/test_ai/run_tests.py --phase offline
-```
-
-此命令不调用真实 GPT API。必须保留 `--phase offline`，因为该入口默认选择真实 API 测试模式。真实 API 测试不属于本节的离线单元测试。
