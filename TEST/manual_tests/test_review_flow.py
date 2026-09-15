@@ -136,7 +136,7 @@ class ReviewFlowCases(LocalHttpTest):
         self.assertEqual((code, after['workflow']), (400, before['workflow']), result)
 
     def test_D03b_normal_cannot_use_anomaly_stage(self):
-        """D03 反向边界：正常数据不能进入异常样本审核流程。"""
+        """D03b 反向边界：正常数据不能进入异常样本审核流程。"""
         target = self.rows[0]['id']
         with self.pipeline.db.connect() as connection:
             connection.execute("UPDATE samples SET split='normal',workflow='normal_review' WHERE id=?", (target,))

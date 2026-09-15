@@ -1,4 +1,3 @@
-"""运行当前项目业务代码的 zyc 用例；用于检查第二阶段修复前后的结果。"""
 from pathlib import Path
 import sys
 

@@ -1,4 +1,3 @@
-"""运行修复副本的 zyc 用例：当前第一阶段仍会暴露 D03、D03b。"""
 from pathlib import Path
 import sys
 
