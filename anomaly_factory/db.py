@@ -271,38 +271,6 @@ class Database:
             )
         return self.get_sample(sample_id)
 
-    def save_generation_feedback_batch(self, sample_ids: List[str], reason_codes: List[str], comment: str) -> List[Dict[str, Any]]:
-        """Validate and write all feedback in one transaction, including audit events."""
-        ids = list(dict.fromkeys(sample_ids))
-        if not ids or len(ids) > 200:
-            raise ValueError("请选择1至200个ROI")
-        allowed = {"pending_generation", "regen_queued", "qc_failed", "core_not_configured"}
-        comment = comment.strip()[:5000]
-        codes_json = json.dumps(sorted(set(reason_codes)), ensure_ascii=False)
-        stamp = now_iso()
-        with self.connect() as conn:
-            conn.execute("BEGIN IMMEDIATE")
-            samples = []
-            for sample_id in ids:
-                sample = conn.execute("SELECT * FROM samples WHERE id=? AND deleted=0", (sample_id,)).fetchone()
-                if sample is None:
-                    raise KeyError(sample_id)
-                if sample["workflow"] not in allowed:
-                    raise ValueError("只有待生成或待重生成ROI可以保存下一轮生成要求")
-                samples.append(sample)
-            for sample in samples:
-                workflow = "hold" if "ROI_MISALIGNED" in reason_codes else sample["workflow"]
-                conn.execute(
-                    "UPDATE samples SET anomaly_reason_codes=?, anomaly_comment=?, workflow=?, updated_at=? WHERE id=?",
-                    (codes_json, comment, workflow, stamp, sample["id"]),
-                )
-                conn.execute(
-                    "INSERT INTO review_events(sample_id, attempt, stage, status, reason_codes, comment, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (sample["id"], int(sample["active_attempt"] or 0), "anomaly", "feedback_updated", codes_json, comment, stamp),
-                )
-        return [self.get_sample(sample_id) for sample_id in ids]
-
-
     def review(self, sample_id: str, stage: str, status: str, reason_codes: List[str], comment: str) -> Dict[str, Any]:
         if stage not in {"anomaly", "mask", "normal"}:
             raise ValueError("invalid review stage")

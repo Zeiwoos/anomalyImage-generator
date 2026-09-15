@@ -160,7 +160,7 @@ class ReviewApplication:
                 "model": str(core_in.get("model") or "gpt-image-2"), "quality": quality,
                 "timeout_seconds": max(30, min(3600, int(core_in.get("timeout_seconds") or 900))),
                 "transport_retries": max(1, min(10, int(core_in.get("transport_retries") or 4))),
-                "transport_job_retries": max(0, min(10, int(core_in.get("transport_job_retries") if core_in.get("transport_job_retries") is not None else 2))),
+                "transport_job_retries": max(0, min(10, int(core_in.get("transport_job_retries") or 2))),
                 "proxy_mode": str(core_in.get("proxy_mode") or "direct"),
             },
             "intelligence": {
@@ -574,7 +574,7 @@ class ReviewApplication:
         unknown = [code for code in reason_codes if code not in set(ANOMALY_REASONS)]
         if unknown:
             raise ValueError("未知审核原因码：{}".format(",".join(unknown)))
-        results = self.pipeline.db.save_generation_feedback_batch(unique_ids, reason_codes, comment)
+        results = [self.pipeline.db.save_generation_feedback(sample_id, reason_codes, comment) for sample_id in unique_ids]
         self.pipeline.export_results_csv()
         return {
             "saved": len(results),
