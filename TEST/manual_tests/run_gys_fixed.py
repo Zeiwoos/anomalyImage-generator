@@ -1,4 +1,4 @@
-"""运行当前项目业务代码的 zyc 用例；用于检查第二阶段修复前后的结果。"""
+"""运行修复副本的 gys 用例：加载 fix_candidates/anomaly_factory。"""
 from pathlib import Path
 import sys
 
@@ -8,4 +8,4 @@ sys.path.insert(0, str(PROJECT))
 from TEST._shared.runner import main
 
 if __name__ == '__main__':
-    raise SystemExit(main('manual_tests', fixed_role='zyc', candidate=False))
+    raise SystemExit(main('manual_tests', fixed_role='gys', candidate=True))

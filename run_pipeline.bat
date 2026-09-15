@@ -1,7 +1,7 @@
 @echo off
 setlocal
 chcp 65001 >nul
-set "PYTHONUTF8=1"
+set "PYTHONUTF8=0"
 set "PYTHONIOENCODING=utf-8"
 set "PROJECT_DIR=%~dp0"
 call "%PROJECT_DIR%find_python.bat"

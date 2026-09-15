@@ -6,7 +6,7 @@
     "database": "中间产物/workspace/pipeline.sqlite3"
   },
   "dataset": {
-    "root": "",
+    "root": "D:/Workshop/ZZ-0804/DiuShi/ZhaPian",
     "mode": "auto",
     "labelme_glob": "**/*.json",
     "deletion_scope": "sample_dir"
@@ -39,7 +39,7 @@
   "core": {
     "adapter": "openai_image_edits",
     "claude_settings": "",
-    "base_url": "",
+    "base_url": "http://192.168.164.197:8317",
     "base_url_env": "PIPELINE_API_BASE_URL",
     "api_key_env": "PIPELINE_API_KEY",
     "model": "gpt-image-2",
@@ -75,7 +75,7 @@
     "parallel_planning": true,
     "parallel_planning_lookahead": 1,
     "batch_planner_max_rois": 4,
-    "batch_reference_candidate_count": 2,
+    "batch_reference_candidate_count": 3,
     "reference_candidate_count": 3,
     "approved_example_count": 1,
     "failed_example_count": 1,

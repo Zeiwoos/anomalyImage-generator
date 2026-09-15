@@ -1,0 +1,61 @@
+--- a/anomaly_factory/db.py
++++ b/anomaly_factory/db.py
+@@ -271,6 +271,38 @@
+             )
+         return self.get_sample(sample_id)
+ 
++    def save_generation_feedback_batch(self, sample_ids: List[str], reason_codes: List[str], comment: str) -> List[Dict[str, Any]]:
++        """Validate and write all feedback in one transaction, including audit events."""
++        ids = list(dict.fromkeys(sample_ids))
++        if not ids or len(ids) > 200:
++            raise ValueError("请选择1至200个ROI")
++        allowed = {"pending_generation", "regen_queued", "qc_failed", "core_not_configured"}
++        comment = comment.strip()[:5000]
++        codes_json = json.dumps(sorted(set(reason_codes)), ensure_ascii=False)
++        stamp = now_iso()
++        with self.connect() as conn:
++            conn.execute("BEGIN IMMEDIATE")
++            samples = []
++            for sample_id in ids:
++                sample = conn.execute("SELECT * FROM samples WHERE id=? AND deleted=0", (sample_id,)).fetchone()
++                if sample is None:
++                    raise KeyError(sample_id)
++                if sample["workflow"] not in allowed:
++                    raise ValueError("只有待生成或待重生成ROI可以保存下一轮生成要求")
++                samples.append(sample)
++            for sample in samples:
++                workflow = "hold" if "ROI_MISALIGNED" in reason_codes else sample["workflow"]
++                conn.execute(
++                    "UPDATE samples SET anomaly_reason_codes=?, anomaly_comment=?, workflow=?, updated_at=? WHERE id=?",
++                    (codes_json, comment, workflow, stamp, sample["id"]),
++                )
++                conn.execute(
++                    "INSERT INTO review_events(sample_id, attempt, stage, status, reason_codes, comment, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
++                    (sample["id"], int(sample["active_attempt"] or 0), "anomaly", "feedback_updated", codes_json, comment, stamp),
++                )
++        return [self.get_sample(sample_id) for sample_id in ids]
++
++
+     def review(self, sample_id: str, stage: str, status: str, reason_codes: List[str], comment: str) -> Dict[str, Any]:
+         if stage not in {"anomaly", "mask", "normal"}:
+             raise ValueError("invalid review stage")
+--- a/anomaly_factory/review_server.py
++++ b/anomaly_factory/review_server.py
+@@ -160,7 +160,7 @@
+                 "model": str(core_in.get("model") or "gpt-image-2"), "quality": quality,
+                 "timeout_seconds": max(30, min(3600, int(core_in.get("timeout_seconds") or 900))),
+                 "transport_retries": max(1, min(10, int(core_in.get("transport_retries") or 4))),
+-                "transport_job_retries": max(0, min(10, int(core_in.get("transport_job_retries") or 2))),
++                "transport_job_retries": max(0, min(10, int(core_in.get("transport_job_retries") if core_in.get("transport_job_retries") is not None else 2))),
+                 "proxy_mode": str(core_in.get("proxy_mode") or "direct"),
+             },
+             "intelligence": {
+@@ -574,7 +574,7 @@
+         unknown = [code for code in reason_codes if code not in set(ANOMALY_REASONS)]
+         if unknown:
+             raise ValueError("未知审核原因码：{}".format(",".join(unknown)))
+-        results = [self.pipeline.db.save_generation_feedback(sample_id, reason_codes, comment) for sample_id in unique_ids]
++        results = self.pipeline.db.save_generation_feedback_batch(unique_ids, reason_codes, comment)
+         self.pipeline.export_results_csv()
+         return {
+             "saved": len(results),

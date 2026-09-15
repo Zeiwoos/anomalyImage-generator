@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>API 真实速度测试</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">ANOMALY FACTORY · DIAGNOSTICS</p>
+        <h1>API 真实速度测试</h1>
+        <p class="subtitle">绕过审核流水线，直接测量当前网关、视觉 LLM 与图片 CORE 的真实耗时。</p>
+      </div>
+      <div id="liveClock" class="clock"><span>空闲</span><strong>0.0 s</strong></div>
+    </header>
+
+    <section class="config-strip">
+      <div><span>API URL</span><code id="baseUrl">加载中…</code></div>
+      <div><span>视觉 LLM</span><strong id="textModel">—</strong></div>
+      <div><span>图片 CORE</span><strong id="imageModel">—</strong></div>
+      <div><span>质量</span><strong id="quality">—</strong></div>
+    </section>
+
+    <section class="layout">
+      <div class="controls panel">
+        <div class="section-heading">
+          <div><span>01</span><h2>选择测试</h2></div>
+          <p>四种测试互不依赖，可定位具体慢在哪一层。</p>
+        </div>
+        <div class="test-grid">
+          <button data-kind="gateway"><b>网关往返</b><small>GET /v1/models · 不推理</small></button>
+          <button data-kind="text"><b>LLM 纯文本</b><small>POST /v1/responses · low</small></button>
+          <button data-kind="vision"><b>LLM 看图</b><small>POST /v1/responses · 1张图</small></button>
+          <button class="danger" data-kind="image_edit"><b>CORE 真实生图</b><small>POST /v1/images/edits · medium</small></button>
+        </div>
+
+        <div class="section-heading compact">
+          <div><span>02</span><h2>测试输入</h2></div>
+          <p>看图和生图可上传代表性样本；留空使用 1024×1024 内置灰度图。</p>
+        </div>
+        <label class="upload" for="imageInput">
+          <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp">
+          <img id="preview" alt="测试图预览">
+          <div><strong>选择一张实际样本</strong><span id="imageInfo">当前使用内置测试图</span></div>
+        </label>
+        <label class="prompt-label">自定义 Prompt（可选）
+          <textarea id="prompt" rows="4" placeholder="留空使用适合当前测试类型的短 Prompt"></textarea>
+        </label>
+        <label class="cost-confirm"><input id="confirmCost" type="checkbox"> 我确认“CORE真实生图”会产生一次实际生图调用与费用</label>
+        <p class="security">密钥只由本机 Python 从现有配置读取，不会发送到网页，也不会写入测速记录。</p>
+      </div>
+
+      <div class="results panel">
+        <div class="section-heading">
+          <div><span>03</span><h2>本次结果</h2></div>
+          <p id="resultSummary">尚未运行测试</p>
+        </div>
+        <div id="emptyResult" class="empty-result">
+          <div class="pulse-ring"></div>
+          <p>点击左侧测试按钮后，这里会显示首响应、下载和总耗时。</p>
+        </div>
+        <div id="result" hidden>
+          <div class="metric-hero"><span>API 总耗时</span><strong id="totalTime">—</strong></div>
+          <div class="metrics">
+            <div><span>首响应 TTFB</span><strong id="ttfb">—</strong><small>含排队与推理等待</small></div>
+            <div><span>响应下载</span><strong id="download">—</strong><small>从响应头到接收完成</small></div>
+            <div><span>完整墙钟</span><strong id="wall">—</strong><small>含本地编码与解析</small></div>
+            <div><span>HTTP</span><strong id="status">—</strong><small id="payloadSize">—</small></div>
+          </div>
+          <dl id="details"></dl>
+          <pre id="outputPreview"></pre>
+          <img id="resultImage" alt="生图测速结果" hidden>
+        </div>
+        <div id="errorBox" class="error-box" hidden></div>
+      </div>
+    </section>
+
+    <section class="history panel">
+      <div class="section-heading">
+        <div><span>04</span><h2>本次会话记录</h2></div>
+        <p>横向比较不同环节，判断慢点是否来自本地。</p>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>时间</th><th>测试</th><th>模型</th><th>TTFB</th><th>API总耗时</th><th>输入</th><th>状态</th></tr></thead><tbody id="historyBody"><tr><td colspan="7">暂无记录</td></tr></tbody></table></div>
+    </section>
+
+    <footer>TTFB 是从请求发出到收到响应头的时间。对非流式推理和生图接口，它通常包含绝大部分服务器端排队与推理时间。</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
