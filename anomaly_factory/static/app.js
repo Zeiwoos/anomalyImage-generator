@@ -1088,7 +1088,20 @@ async function probeApi(target) {
   } catch (error) { els.apiSettingsStatus.textContent = `测试失败：${error.message}`; }
 }
 
+function configurePlatformCommands() {
+  const clientPlatform = String(
+    (navigator.userAgentData && navigator.userAgentData.platform)
+      || navigator.platform
+      || navigator.userAgent
+      || ""
+  );
+  const commandKey = /windows|win32|win64/i.test(clientPlatform) ? "windowsCommand" : "posixCommand";
+  const command = els.exportCommand.dataset[commandKey];
+  if (command) els.exportCommand.textContent = command;
+}
+
 function bind() {
+  configurePlatformCommands();
   applyLayoutState();
   for (const element of [els.labelFilter, els.workflowFilter]) element.addEventListener("change", applyFilters);
   els.searchInput.addEventListener("input", applyFilters);

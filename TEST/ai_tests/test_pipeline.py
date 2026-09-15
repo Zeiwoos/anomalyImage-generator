@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import shutil
 import tempfile
 import threading
@@ -11,6 +12,10 @@ import base64
 from pathlib import Path
 from unittest.mock import patch
 
+PROJECT = Path(__file__).resolve().parents[2]
+if str(PROJECT) not in sys.path:
+    sys.path.insert(0, str(PROJECT))
+
 from PIL import Image
 
 from anomaly_factory.config import load_config
@@ -19,10 +24,6 @@ from anomaly_factory.intelligence import build_roi_context
 from anomaly_factory.pipeline import Pipeline, boundary_seam_metrics, match_local_tone, qc_metrics
 from anomaly_factory.reference_index import build_reference_index
 from anomaly_factory.review_server import ReviewApplication
-
-
-PROJECT = Path(__file__).resolve().parent.parent
-REFERENCE = PROJECT / "Anomaly-reference"
 
 
 class PipelineTest(unittest.TestCase):
@@ -38,16 +39,33 @@ class PipelineTest(unittest.TestCase):
             "shapes": [{"label": "DS_LS", "points": [[24, 18], [48, 40]], "group_id": None, "shape_type": "rectangle", "flags": {}}],
         }
         (dataset / "source.json").write_text(json.dumps(payload), encoding="utf-8")
+        reference = self.root / "Anomaly-reference" / "DiuShi" / "LuoShuan"
+        reference.mkdir(parents=True)
+        for index, shade in enumerate((90, 105), start=1):
+            image_name = f"reference_{index}.png"
+            Image.new("L", (100, 80), shade).save(reference / image_name)
+            reference_payload = {
+                "version": "5.0.1", "flags": {}, "imagePath": image_name, "imageData": None,
+                "imageWidth": 100, "imageHeight": 80,
+                "shapes": [{
+                    "label": "DS_LS", "points": [[30, 20], [70, 60]], "group_id": None,
+                    "shape_type": "rectangle", "flags": {},
+                }],
+            }
+            (reference / f"reference_{index}.json").write_text(
+                json.dumps(reference_payload), encoding="utf-8"
+            )
+        self.reference_root = reference.parents[1]
         knowledge = self.root / "knowledge-bank"
         knowledge.mkdir()
         shutil.copy2(PROJECT / "knowledge-bank" / "labels.json", knowledge / "labels.json")
         shutil.copy2(PROJECT / "knowledge-bank" / "feedback_rules.json", knowledge / "feedback_rules.json")
         for name in ["01_global_rules.md", "03_missing.md", "08_prompt_protocol.md", "09_quality_gate.md"]:
             shutil.copy2(PROJECT / "knowledge-bank" / name, knowledge / name)
-        build_reference_index(REFERENCE, knowledge / "reference_index.json")
+        build_reference_index(self.reference_root, knowledge / "reference_index.json")
         config = {
             "project": {
-                "reference_root": str(REFERENCE), "knowledge_root": str(knowledge),
+                "reference_root": str(self.reference_root), "knowledge_root": str(knowledge),
                 "intermediate_root": str(self.root / "intermediate"), "database": str(self.root / "intermediate" / "pipeline.sqlite3"),
             },
             "dataset": {"root": str(self.root / "dataset")},

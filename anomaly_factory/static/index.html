@@ -73,7 +73,7 @@
           <div class="export-help">
             <p><strong>“下载审核记录 CSV”只是备查文件，不需要再次导入。</strong>它记录当前通过、驳回、原因和备注；下载后继续在本页面审核即可。</p>
             <p>全部样本显示“全部通过”后，在当前项目根目录中执行：</p>
-            <div class="command-row"><code id="exportCommand">run_pipeline.bat export-approved --output "D:\path\to\final_dataset"</code><button id="copyExportCommand" class="tool-button" type="button">复制命令</button></div>
+            <div class="command-row"><code id="exportCommand" data-windows-command='run_pipeline.bat export-approved --output "D:\path\to\final_dataset"' data-posix-command='./run_pipeline.sh export-approved --output "/Users/yourname/path/to/final_dataset"'>./run_pipeline.sh export-approved --output "/Users/yourname/path/to/final_dataset"</code><button id="copyExportCommand" class="tool-button" type="button">复制命令</button></div>
           </div>
         </div>
       </details>

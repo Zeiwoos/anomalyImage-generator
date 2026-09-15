@@ -1,6 +1,6 @@
 # anomalyImage-generator 手工接口测试框架
 
-该目录用于编写针对 anomalyImage-generator 审核后端的接口与流程测试。框架只使用 Python 标准库，不需要额外安装 pytest 或 requests。
+该目录用于编写针对审核后端的接口与流程测试。框架只使用 Python 标准库，不需要额外安装 pytest 或 requests。
 
 ## 快速开始
 
@@ -22,6 +22,19 @@
    TEST\manual_tests\run_tests.bat
    ```
 
+macOS：
+
+```bash
+./run_pipeline.sh scan
+./start_review_tool.sh
+```
+
+在另一个终端进入项目根目录并运行：
+
+```bash
+./TEST/manual_tests/run_tests.sh
+```
+
 默认测试地址是 `http://127.0.0.1:8898`。如果后端使用了其他端口，将 `config.example.json` 复制为 `config.local.json` 后修改 `base_url`。`config.local.json` 不应提交到版本库。
 
 也可以临时指定地址：
@@ -29,6 +42,12 @@
 ```bat
 set "ANOMALY_TEST_BASE_URL=http://127.0.0.1:8900"
 TEST\manual_tests\run_tests.bat
+```
+
+macOS或Linux：
+
+```bash
+ANOMALY_TEST_BASE_URL="http://127.0.0.1:8900" ./TEST/manual_tests/run_tests.sh
 ```
 
 ## 编写用例
@@ -59,6 +78,13 @@ TEST\manual_tests\run_tests.bat "test_multi_roi*.py"
 
 每次执行会在 `reports/` 中生成带时间戳的文本报告。
 
+而在macOS或者Linux系统中如下所示：
+
+```bash
+./TEST/manual_tests/run_tests.sh test_api_smoke.py
+./TEST/manual_tests/run_tests.sh 'test_multi_roi*.py'
+```
+
 ## 已提供的能力
 
 - `api_client.py`：GET/POST JSON、二进制下载、HTTP错误诊断和Worker轮询。
@@ -79,4 +105,3 @@ TEST\manual_tests\run_tests.bat "test_multi_roi*.py"
 - `POST /api/delete-sample`
 
 其中 `/api/delete-sample` 会移动整个样本目录。除非测试数据可丢弃且已验证 `sample_id`，不要在普通测试中调用。
-

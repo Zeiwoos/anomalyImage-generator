@@ -1113,6 +1113,7 @@ def available_port(host: str, preferred: int) -> int:
 def serve(pipeline: Pipeline, no_browser: bool = False) -> None:
     global APP
     APP = ReviewApplication(pipeline)
+    dataset_root = pipeline.dataset_root()
     review = pipeline.config["review"]
     host = str(review.get("host") or "127.0.0.1")
     port = available_port(host, int(review.get("port") or 8895))
@@ -1120,7 +1121,7 @@ def serve(pipeline: Pipeline, no_browser: bool = False) -> None:
     url = "http://{}:{}".format(host, port)
     print("\n工业异常生成与Mask一体化审核台已启动")
     print("地址：{}".format(url))
-    print("数据集：{}".format(pipeline.dataset_root()))
+    print("数据集：{}".format(dataset_root))
     print("中间产物：{}".format(pipeline.paths["intermediate"]))
     print("按 Ctrl+C 关闭\n")
     if not no_browser and bool(review.get("open_browser", True)):
