@@ -543,6 +543,8 @@ class ReviewApplication:
         if unknown:
             raise ValueError("未知审核原因码：{}".format(",".join(unknown)))
         sample = self.pipeline.db.get_sample(sample_id)
+        if (stage == "normal") != (sample.get("split") == "normal"):
+            raise ValueError("normal审核仅适用于正常样本；异常样本须完成异常与Mask审核")
         attempt = self.pipeline.db.active_attempt(sample_id)
         if not attempt:
             raise ValueError("样本没有可审核的生成版本")

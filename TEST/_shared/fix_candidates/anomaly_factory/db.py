@@ -309,6 +309,8 @@ class Database:
         if status not in {"pending", "approved", "rejected", "hold"}:
             raise ValueError("invalid review status")
         sample = self.get_sample(sample_id)
+        if (stage == "normal") != (sample.get("split") == "normal"):
+            raise ValueError("normal审核仅适用于正常样本；异常样本须完成异常与Mask审核")
         attempt = int(sample["active_attempt"])
         if attempt <= 0:
             raise ValueError("样本尚无生成版本")
