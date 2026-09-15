@@ -88,8 +88,7 @@ def main(module, fixed_role=None, *, candidate=False):
                   'seconds': round(time.monotonic()-begin, 3), 'upstream_calls': 0,
                   'loaded_source': str(loaded.__file__),
                   'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                                    for p in (chosen / 'anomaly_factory').glob('*.py')},
-                  'provenance': 'AI-assisted; roles are responsibilities, not claimed human authorship'}
+                                    for p in (chosen / 'anomaly_factory').glob('*.py')}}
         (output / 'results.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
         print('Report:', output / 'results.json')
         passed = result.wasSuccessful()
