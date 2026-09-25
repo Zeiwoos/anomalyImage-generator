@@ -21,7 +21,7 @@ from PIL import Image, ImageDraw, ImageEnhance
 from anomaly_factory.config import load_config, DEFAULT_CONFIG
 from anomaly_factory.intelligence import VisionLLMClient, IntelligenceTransportError
 from TEST.test_ai.live_cases_gys import cases as gys_cases
-from TEST.test_ai.live_cases_zyc import cases as zyc_cases
+from TEST.test_ai.package.live_cases_zyc import cases as zyc_cases
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -221,11 +221,15 @@ def main(argv=None):
     specs=[dict(c,repeat=r,run_id=c['id']+'-R'+str(r)) for r in range(1,args.repeat+1) for c in specs]
     out=args.output or ROOT/'reports'/('live_ai_'+datetime.now().strftime('%Y%m%d_%H%M%S'))
     if out.exists() and any(out.iterdir()): parser.error('Evidence output must be a new or empty directory; historical runs are immutable')
-    out.mkdir(parents=True,exist_ok=True);data=out/'fixtures';fixtures(data)
     config, config_source=api_config(args.config,args.claude_settings)
     config['intelligence'].update(enabled=True,reasoning_effort='low',timeout_seconds=max(10,min(180,args.timeout)),transport_retries=1,transport_retry_backoff_seconds=0)
     config['intelligence'].update(planner_reasoning_effort=args.effort,critic_reasoning_effort=args.effort,comparison_reasoning_effort=args.effort)
-    client=RecordedClient(config,Budget(1))  # Credential/config validation only: no request.
+    try:
+        client=RecordedClient(config,Budget(1))  # Credential/config validation only: no request.
+    except ValueError as exc:
+        credentials = Path(config['_project_root']) / 'api_credentials.local.json'
+        parser.error(str(exc) + '；请在 ' + str(credentials) + ' 填写对应密钥。')
+    out.mkdir(parents=True,exist_ok=True);data=out/'fixtures';fixtures(data)
     budget=Budget(max(1,min(96,args.max_requests)))
     manifest={'started_utc':datetime.now(timezone.utc).isoformat(),'role':args.role,'config_sha256':hashlib.sha256(config_source.read_bytes()).hexdigest(),
               'configuration_kind':'claude_settings' if args.claude_settings else 'pipeline_config',

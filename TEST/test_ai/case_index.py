@@ -1,6 +1,7 @@
-"""AI 测试分工：gys 8 项、zyc 8 项；缺陷用例保留在对应功能文件中。"""
+"""全部 AI 离线用例：gys 8 项，加上 package 中 zyc 的 8 项。"""
+from TEST.test_ai.package.case_index import CASES as ZYC_CASES
 
-CASES = [
+GYS_CASES = [
     {'id': 'T01', 'role': 'gys', 'test': 'TEST.test_ai.test_vision_contracts.VisionContractCases.test_T01_wire_request_contains_source_reference_and_instruction'},
     {'id': 'T02', 'role': 'gys', 'test': 'TEST.test_ai.test_vision_contracts.VisionContractCases.test_T02_batch_plan_maps_every_roi_and_audits_references'},
     {'id': 'T03', 'role': 'gys', 'test': 'TEST.test_ai.test_vision_contracts.VisionContractCases.test_T03_missing_roi_in_model_response_is_rejected'},

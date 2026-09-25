@@ -1,4 +1,4 @@
-"""AI 第一阶段离线修复验证：D06 已修复，D04／D05 留到 zyc 第二阶段。"""
+"""AI 完整离线修复验证：包含 gys 的 D06 和 zyc 的 D04、D05。"""
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
