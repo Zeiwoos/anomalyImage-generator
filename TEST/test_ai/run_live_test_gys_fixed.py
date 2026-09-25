@@ -1,4 +1,3 @@
-"""运行 gys 的 10 项真实 API 测试，加载完整修复版；直接运行可能产生费用。"""
 from pathlib import Path
 import sys
 
@@ -7,3 +6,6 @@ from TEST._shared.runner import main
 
 if __name__ == '__main__':
     raise SystemExit(main('test_ai', fixed_role='gys', candidate=True, live_entry=True))
+
+
+# deepseek在线测试修复版——郭叶盛负责部分
