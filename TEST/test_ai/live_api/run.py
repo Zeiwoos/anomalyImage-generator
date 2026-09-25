@@ -110,6 +110,7 @@ class RecordedClient(VisionLLMClient):
     def __init__(self, config, budget):
         super().__init__(config)
         self.budget=budget; self.requests=[]; self.responses=[]
+        self.controlled_request=False
     def redact(self,value):
         if isinstance(value,str): return value.replace(self.api_key,'[REDACTED]') if self.api_key else value
         if isinstance(value,list): return [self.redact(v) for v in value]
@@ -118,9 +119,18 @@ class RecordedClient(VisionLLMClient):
     def _request(self,body):
         self.budget.consume()
         body=deepcopy(body);body['max_output_tokens']=int(self.config.get('test_max_output_tokens',1536))
+        if self.config.get('test_live_fixed'):
+            from TEST._shared.ai_fix_candidates.live_gys import bind_images
+            from TEST._shared.ai_fix_candidates.live_zyc import protect_source, output_budget
+            output_budget(body)
+            if self.controlled_request:
+                body['input'][0]['content'] = protect_source(bind_images(body['input'][0]['content']))
         self.requests.append(deepcopy(body))
         response=super()._request(body)
         self.responses.append(self.redact(response))
+        if self.config.get('test_live_fixed'):
+            from TEST._shared.ai_fix_candidates.live_zyc import require_complete
+            require_complete(response)
         return response
 
 
@@ -158,7 +168,8 @@ def run_case(case,config,budget,folder,data):
     refs=[] if case.get('no_refs') else [data/'missing_reference.png',data/'oil_reference.png']
     if case.get('reverse_refs'): refs.reverse()
     images=[data/(case['source']+'.png'),*refs]
-    record={'id':case['id'],'owner':'A' if '-A' in case['id'] else 'B','title':case['title'],
+    client.controlled_request = not bool(case.get('production'))
+    record={'id':case['id'],'owner':'gys' if '-A' in case['id'] else 'zyc','title':case['title'],
             'expected':case['expected'],'expected_source_bolts':case['bolts'],
             'model_requested':client.config['model'],'url':client._url(),
             'input_files':[{'name':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in images],
@@ -174,6 +185,9 @@ def run_case(case,config,budget,folder,data):
             response=client.responses[-1] if client.responses else {}
             record['scope']='production VisionLLMClient method with live upstream; controlled images'
         else:
+            if client.config.get('test_live_fixed'):
+                from TEST._shared.ai_fix_candidates.live_zyc import target_constraints
+                instruction += target_constraints(case['targets'])
             result,response=client._call_json('controlled_anomaly_check',instruction,images,SCHEMA,reasoning_effort='low')
             failures=check(case,result)
         record.update(status='failed' if failures else 'passed',result=client.redact(result),failures=failures,
@@ -190,7 +204,7 @@ def run_case(case,config,budget,folder,data):
     return record
 
 
-def main(argv=None):
+def main(argv=None, *, fixed=False):
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8')
     parser=argparse.ArgumentParser(description=__doc__)
@@ -221,17 +235,25 @@ def main(argv=None):
     specs=[dict(c,repeat=r,run_id=c['id']+'-R'+str(r)) for r in range(1,args.repeat+1) for c in specs]
     out=args.output or ROOT/'reports'/('live_ai_'+datetime.now().strftime('%Y%m%d_%H%M%S'))
     if out.exists() and any(out.iterdir()): parser.error('Evidence output must be a new or empty directory; historical runs are immutable')
-    out.mkdir(parents=True,exist_ok=True);data=out/'fixtures';fixtures(data)
     config, config_source=api_config(args.config,args.claude_settings)
+    config['intelligence']['test_live_fixed'] = fixed
     config['intelligence'].update(enabled=True,reasoning_effort='low',timeout_seconds=max(10,min(180,args.timeout)),transport_retries=1,transport_retry_backoff_seconds=0)
     config['intelligence'].update(planner_reasoning_effort=args.effort,critic_reasoning_effort=args.effort,comparison_reasoning_effort=args.effort)
-    client=RecordedClient(config,Budget(1))  # Credential/config validation only: no request.
+    try:
+        client=RecordedClient(config,Budget(1))  # Credential/config validation only: no request.
+    except ValueError as exc:
+        credentials = Path(config['_project_root']) / 'api_credentials.local.json'
+        parser.error(str(exc) + '；请在 ' + str(credentials) + ' 填写对应密钥。')
+    out.mkdir(parents=True,exist_ok=True);data=out/'fixtures';fixtures(data)
     budget=Budget(max(1,min(96,args.max_requests)))
     manifest={'started_utc':datetime.now(timezone.utc).isoformat(),'role':args.role,'config_sha256':hashlib.sha256(config_source.read_bytes()).hexdigest(),
               'configuration_kind':'claude_settings' if args.claude_settings else 'pipeline_config',
               'repeat_count':args.repeat,'unique_case_count':len(specs)//args.repeat,
               'production_reasoning_effort':args.effort,
               'oracle_version':2,
+              'live_request_variant':'fixed' if fixed else 'baseline',
+              'live_fix_files':{name:hashlib.sha256((ROOT.parent/'_shared'/'ai_fix_candidates'/name).read_bytes()).hexdigest()
+                                for name in ('live_gys.py','live_zyc.py')} if fixed else {},
               'loaded_source':str(__import__('anomaly_factory.intelligence',fromlist=['__file__']).__file__),
               'source_sha256':hashlib.sha256(Path(__import__('anomaly_factory.intelligence',fromlist=['__file__']).__file__).read_bytes()).hexdigest(),
               'endpoint':client._url(),'model_requested':client.config['model'],'max_http_requests':budget.maximum,
@@ -244,7 +266,7 @@ def main(argv=None):
     print('Running real model:',client.config['model'],'at',client._url(),flush=True)
     start=time.monotonic();records=[run_case(specs[0],config,budget,out,data)]
     if records[0]['status'] in {'infrastructure_error','harness_error'}:
-        records.extend({'id':c['id'],'run_id':c['run_id'],'repeat':c['repeat'],'owner':'A' if '-A' in c['id'] else 'B','title':c['title'],
+        records.extend({'id':c['id'],'run_id':c['run_id'],'repeat':c['repeat'],'owner':'gys' if '-A' in c['id'] else 'zyc','title':c['title'],
                         'status':'blocked','reason':'First API request failed; no additional calls made.'} for c in specs[1:])
     else:
         with ThreadPoolExecutor(max_workers=args.workers) as executor:

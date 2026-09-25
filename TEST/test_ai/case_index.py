@@ -1,4 +1,4 @@
-"""AI 测试分工：gys 8 项、zyc 8 项；缺陷用例保留在对应功能文件中。"""
+"""全部 AI 离线用例：gys、zyc 各 8 项，均位于当前目录。"""
 
 CASES = [
     {'id': 'T01', 'role': 'gys', 'test': 'TEST.test_ai.test_vision_contracts.VisionContractCases.test_T01_wire_request_contains_source_reference_and_instruction'},

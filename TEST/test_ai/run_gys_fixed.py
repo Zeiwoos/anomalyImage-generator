@@ -1,4 +1,4 @@
-"""运行 gys 的 AI 测试：加载 AI 第一阶段修复副本。"""
+"""运行 gys 的 AI 测试：加载 AI 完整修复副本。"""
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
