@@ -116,7 +116,7 @@ def main(module, fixed_role=None, *, candidate=False, source_root=None, report_v
                           '--group', args.group, '--effort', args.effort,
                           *(['--case-ids',*args.case_ids] if args.case_ids else []),
                           '--workers', str(args.workers), '--timeout', str(args.timeout),
-                          '--max-requests', str(args.max_requests), '--output', str(live_output)])
+                          '--max-requests', str(args.max_requests), '--output', str(live_output)], fixed=candidate)
         passed = passed and code == 0
     elif module == 'test_ai':
         print('Offline only. Real API cases were NOT run.')
