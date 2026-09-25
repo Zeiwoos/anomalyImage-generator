@@ -15,11 +15,11 @@ TEST_ROOT = Path(__file__).resolve().parents[1]
 PROJECT = TEST_ROOT.parent
 
 
-def main(module, fixed_role=None, *, candidate=False):
+def main(module, fixed_role=None, *, candidate=False, source_root=None, report_variant=None, live_entry=False):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--role', choices=['gys', 'zyc', 'all'], default=fixed_role or 'all')
     parser.add_argument('--list', action='store_true', help='List selected cases without running')
-    parser.add_argument('--phase', choices=['offline', 'live', 'all'], default='live' if module == 'test_ai' else 'offline')
+    parser.add_argument('--phase', choices=['offline', 'live', 'all'], default='live' if live_entry else 'offline')
     parser.add_argument('--config', type=Path)
     parser.add_argument('--claude-settings', type=Path)
     parser.add_argument('--repeat', type=int, choices=range(1,4), default=1)
@@ -32,6 +32,12 @@ def main(module, fixed_role=None, *, candidate=False):
     parser.add_argument('--timeout', type=int, default=180)
     parser.add_argument('--max-requests', type=int, default=20)
     args = parser.parse_args()
+    if live_entry:
+        if module != 'test_ai' or args.phase != 'live':
+            parser.error('此入口仅用于真实 AI 测试；离线测试请运行 run_tests.py。')
+        if not args.config and not args.claude_settings:
+            args.config = PROJECT / 'config.json'
+        args.allow_paid = True
     if fixed_role and args.role != fixed_role:
         parser.error('This entry point belongs to role ' + fixed_role)
     if module != 'test_ai' and args.phase != 'offline':
@@ -45,15 +51,21 @@ def main(module, fixed_role=None, *, candidate=False):
         from TEST.manual_tests.case_index import resolved_cases
         offline_cases = resolved_cases()
     else:
-        offline_cases = json.loads((folder / 'cases.json').read_text(encoding='utf-8'))['offline_cases']
+        from TEST.test_ai.case_index import CASES
+        offline_cases = CASES
     selected = [c for c in offline_cases if args.role == 'all' or c['role'] == args.role]
     if not selected:
         parser.error('No cases selected')
-    chosen = TEST_ROOT / '_shared/fix_candidates' if candidate else PROJECT
-    if candidate and module != 'manual_tests' and not args.list:
-        parser.error('deny')
+    candidate_folder = 'ai_fix_candidates' if module == 'test_ai' else 'fix_candidates'
+    chosen = TEST_ROOT / '_shared' / candidate_folder if candidate else PROJECT
+    if source_root is not None:
+        chosen = Path(source_root).resolve()
+    variant = report_variant or ('candidate' if candidate else 'baseline')
+    if live_entry and not args.list:
+        print('真实 API 测试：将发送图片和请求，可能产生费用。', flush=True)
+        print('被测代码：' + str(chosen / 'anomaly_factory'), flush=True)
     if candidate and not args.list and not (chosen / 'anomaly_factory/__init__.py').is_file():
-        parser.error('找不到 TEST/_shared/fix_candidates/anomaly_factory 修复副本。')
+        parser.error('找不到修复副本：' + str(chosen / 'anomaly_factory'))
     sys.path.insert(0, str(PROJECT))
     sys.path.insert(0, str(chosen))
     if args.list:
@@ -71,7 +83,7 @@ def main(module, fixed_role=None, *, candidate=False):
         from TEST._shared.evidence import EvidenceResult
         import anomaly_factory.review_server as loaded
         assert Path(loaded.__file__).resolve().is_relative_to(chosen.resolve()), loaded.__file__
-        output = folder / 'reports' / role_dir / ('candidate' if candidate else 'baseline')
+        output = folder / 'reports' / role_dir / variant
         output.mkdir(parents=True, exist_ok=True)
         temp = output / 'tmp'
         temp.mkdir(exist_ok=True)
@@ -81,7 +93,7 @@ def main(module, fixed_role=None, *, candidate=False):
         begin = time.monotonic()
         result = unittest.TextTestRunner(verbosity=2, resultclass=EvidenceResult).run(suite)
         import PIL
-        report = {'module': module, 'role': args.role, 'variant': 'candidate' if candidate else 'baseline',
+        report = {'module': module, 'role': args.role, 'variant': variant,
                   'date_utc': datetime.now(timezone.utc).isoformat(), 'python': sys.version.split()[0],
                   'pillow': PIL.__version__, 'tests_run': result.testsRun, 'failures': len(result.failures),
                   'errors': len(result.errors), 'skipped': len(result.skipped), 'records': result.records,
@@ -98,7 +110,7 @@ def main(module, fixed_role=None, *, candidate=False):
         os.environ.pop('ANOMALY_TEST_TMPDIR', None)
     if args.phase != 'offline':
         from TEST.test_ai.live_api.run import main as live_main
-        live_output = args.output or folder / 'reports' / role_dir / ('live_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
+        live_output = args.output or folder / 'reports' / role_dir / ('live_' + variant + '_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
         config_args = ['--claude-settings', str(args.claude_settings.resolve())] if args.claude_settings else ['--config', str(args.config.resolve())]
         code = live_main([*config_args, '--allow-paid', '--role', args.role, '--repeat', str(args.repeat),
                           '--group', args.group, '--effort', args.effort,
